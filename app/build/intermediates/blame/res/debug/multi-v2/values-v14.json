@@ -1,0 +1,28 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/jsoto/Desarrollo/android/W4U - MobilFP/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-v14/values-v14.xml",
+            "map": [
+                {
+                    "source": "/Users/jsoto/Desarrollo/android/W4U - MobilFP/app/src/main/res/values-v14/styles.xml",
+                    "from": {
+                        "startLines": "7,12",
+                        "startColumns": "4,4",
+                        "startOffsets": "227,514",
+                        "endLines": "11,14",
+                        "endColumns": "12,12",
+                        "endOffsets": "508,624"
+                    },
+                    "to": {
+                        "startLines": "2,7",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,337",
+                        "endLines": "6,9",
+                        "endColumns": "12,12",
+                        "endOffsets": "332,445"
+                    }
+                }
+            ]
+        }
+    ]
+}
