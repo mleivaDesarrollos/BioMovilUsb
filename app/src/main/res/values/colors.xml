@@ -7,4 +7,5 @@
     <color name="yellow">#FFBB33</color>
     <color name="verde">#40A99C</color>
     <color name="azul">#337ab7</color>
+    <color name="slight_dark_with_transparency">#30000000</color>
 </resources>

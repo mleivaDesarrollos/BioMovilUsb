@@ -18,6 +18,13 @@
     <string name="txt_fichaok">Ficho Ok </string>
     <string name="txt_fichafail">Error al verificar la huella</string>
     <string name="title_activity_enrol">Nueva Persona</string>
+    <!--Strings related to new enroll-->
+    <string name="hint_company_number">Numero de empresa</string>
+    <string name="hint_employee_number">Legajo del empleado</string>
+    <string name="hint_employee_fullname">Nombre y apellido</string>
+    <string name="button_read_fingerprint">Leer Huella</string>
+    <string name="button_save_new_enroll">Guardar Empleado</string>
+
 
     <!-- Strings related to Settings -->
 

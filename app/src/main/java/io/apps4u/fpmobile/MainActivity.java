@@ -207,7 +207,7 @@ public class MainActivity extends Activity {
 		btnMenuEnrol.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),EnrolActivity.class);
+                Intent intent = new Intent(getApplicationContext(),Enroll.class);
                 startActivity(intent);
 
             }
@@ -406,7 +406,7 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_enrol:
-                Intent intentEnrol = new Intent(this, EnrolActivity.class);
+                Intent intentEnrol = new Intent(this, Enroll.class);
                 this.startActivity(intentEnrol);
                 break;
             case R.id.action_settings:

@@ -1,0 +1,2 @@
+#Para configuraciones locales evitamos que siga el archivo local properties
+local.properties

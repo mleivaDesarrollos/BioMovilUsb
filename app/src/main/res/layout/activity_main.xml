@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:alpha="0.8"
-    android:background="@drawable/inicio"
+    android:alpha="1"
+    android:background="@drawable/background"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -27,8 +27,8 @@
             android:layout_height="wrap_content"
             android:width="300dp"
             android:background="@color/azul"
-            android:textColor="@android:color/background_light"
-            android:text="@string/txt_bt1" />
+            android:text="@string/txt_bt1"
+            android:textColor="@android:color/background_light" />
 
         <Space
             android:layout_width="match_parent"
@@ -55,8 +55,8 @@
             android:layout_height="wrap_content"
             android:width="300dp"
             android:background="@color/azul"
-            android:textColor="@android:color/background_light"
-            android:text="@string/txt_bt10" />
+            android:text="@string/txt_bt10"
+            android:textColor="@android:color/background_light" />
 
         <Space
             android:layout_width="match_parent"
@@ -69,8 +69,8 @@
             android:layout_height="wrap_content"
             android:width="300dp"
             android:background="@color/azul"
-            android:textColor="@android:color/background_light"
-            android:text="@string/txt_bt11" />
+            android:text="@string/txt_bt11"
+            android:textColor="@android:color/background_light" />
 
         <EditText
             android:id="@+id/editText1"
@@ -91,7 +91,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="@string/status" />
+            android:text="@string/status"
+            android:textColor="@android:color/background_light" />
 
         <ImageView
             android:id="@+id/imageView1"
