@@ -11,6 +11,11 @@ public class VerEmpleados extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_empleados);
+        // Cargamos la lista de empleados
+        LoadEmpleadosList();
+    }
+
+    public void LoadEmpleadosList(){
         // Obtenemos la instancia de base de datos almacenada en el dispositivo
         EmpleadosDbHelper em = new EmpleadosDbHelper(getApplicationContext());
         // Llamamos a la función para levantar todos los empleados almacenados en la base local
@@ -30,10 +35,10 @@ public class VerEmpleados extends Activity {
                 vistaListaEmpleados(VerEmpleados.this, nombre, huella,legajo);
         // Recolectamos el ListView del activity
         ListView list=findViewById(R.id.lvEmpleados);
+        // Limpiamos el Adaptador del listado
+        list.setAdapter(null);
         // Establecemos el adaptador sobre el listado
         list.setAdapter(adapter);
-
-
     }
 
 }

@@ -426,7 +426,7 @@ public class MainActivity extends Activity {
 		try {
 
 			EmpleadosDbHelper emp = new EmpleadosDbHelper(getApplicationContext());
-			emp.saveEmpleado(new Empleado("Jose","61", content));
+			emp.saveEmpleado(new Empleado("Mega","Jose", "61", content));
 			FileWriter fw = new FileWriter(sDirectory+"/"+filename+".txt");//SD卡中的路径
 			fw.flush();
 			fw.write(content);

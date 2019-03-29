@@ -1,17 +1,18 @@
 package io.apps4u.fpmobile;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import java.util.TimerTask;
 import fgtit.fpengine.fpdevice;
 
 public class Enroll extends Activity {
+    private static final String NO_FINGER_DATA = "NONE";
     public static final int WORKTYPE_NULL=0;
     public static final int WORKTYPE_ENROL=1;
     public static final int WORKTYPE_MATCH=2;
@@ -45,50 +47,102 @@ public class Enroll extends Activity {
     public static final String ACTION_USB_PERMISSION = "io.apps4u.fpmobile.USB";
     private Button btnOpen,btnClose,btnEnrol;
     private ImageView ivImage=null;
+    private boolean modifyEmployee = false;
+    private String FingerData = NO_FINGER_DATA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_enroll); ivImage= (ImageView)findViewById(R.id.fpImage);
-        Button btnScanear = findViewById(R.id.btnScanear);
-        fpdev.SetInstance(this);
-        fpdev.SetUpImage(true);
-        switch(fpdev.OpenDevice()){
-            case 0:
-                initHandler();
-                isopening=true;
-                Toast.makeText(getApplicationContext(),"Dispositivo OK",Toast.LENGTH_SHORT).show();
-
-                break;
-            case -1:
-                //  tvStatus.setText("Link Device Fail");
-                break;
-            case -2:
-                // tvStatus.setText("Evaluation version expires");
-                break;
-            case -3:
-                // tvStatus.setText("Open Device Fail");
-                break;
-        }
-
-
-        btnScanear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                workType=WORKTYPE_NULL;
-                TimerStop();
-                SystemClock.sleep(200);
-                TimerStart();
-                Toast.makeText(getApplicationContext(),R.string.txt_fp1,Toast.LENGTH_SHORT).show();
-                workType=WORKTYPE_ENROL;
-                enrolCount=0;
-                totalCount=0;
+        setContentView(R.layout.activity_enroll);
+        if(!isModifyRequest()){
+            ivImage= (ImageView)findViewById(R.id.fpImage);
+            Button btnScanear = findViewById(R.id.btnScanear);
+            fpdev.SetInstance(this);
+            fpdev.SetUpImage(true);
+            switch(fpdev.OpenDevice()){
+                case 0:
+                    initHandler();
+                    isopening=true;
+                    Toast.makeText(getApplicationContext(),"Dispositivo OK",Toast.LENGTH_SHORT).show();
+                    break;
+                case -1:
+                    //  tvStatus.setText("Link Device Fail");
+                    break;
+                case -2:
+                    // tvStatus.setText("Evaluation version expires");
+                    break;
+                case -3:
+                    // tvStatus.setText("Open Device Fail");
+                    break;
             }
-        });
+
+            btnScanear.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    workType=WORKTYPE_NULL;
+                    TimerStop();
+                    SystemClock.sleep(200);
+                    TimerStart();
+                    Toast.makeText(getApplicationContext(),R.string.txt_fp1,Toast.LENGTH_SHORT).show();
+                    workType=WORKTYPE_ENROL;
+                    enrolCount=0;
+                    totalCount=0;
+                }
+            });
+        }
     }
 
+    // Validamos si el intent viene con legajo, de ser asi traemos los datos de la base y completamos los campos
+    private boolean isModifyRequest(){
+        // Recolectamos el intent
+        Intent intent = getIntent();
+        // Validamos si el intent viene con legajo
+        if(intent.hasExtra("legajo")){
+            // Generamos una nueva instancia del contexto
+            EmpleadosDbHelper dbInstance = new EmpleadosDbHelper(getApplicationContext());
+            // Separamos el legajo y lo almacenamos en un string
+            String strLegajo = intent.getStringExtra("legajo");
+            // Obtenemos el empleado desde la base de datos
+            Empleado employee = dbInstance.GetEmpleado(strLegajo);
+            // Mostramos los datos del empleado en cada uno de los campos
+            EditText txtCompanyID = (EditText) findViewById(R.id.txtCompanyID);
+            EditText txtEmployeeFullname = (EditText) findViewById(R.id.txtEmployeFullname);
+            EditText txtEmployeeNumber = (EditText) findViewById(R.id.txtEmployeeNumber);
+            ImageView ivFingerPrint = (ImageView) findViewById(R.id.fpImage);
+            Button btnScanear = (Button) findViewById(R.id.btnScanear);
+            Button btnGuardar = (Button) findViewById(R.id.btnGuardar);
+            // Deshabilitamos la modificación del numero de empleado
+            txtEmployeeNumber.setEnabled(false);
+            // Desencriptamos a bytes la imagen de la huella
+            byte[] decodedHuella = Base64.decode(employee.getHuella().getBytes(), 0);
+            // Generamos un bitmap a partir de los bytes
+            Bitmap bmpHuella = BitmapFactory.decodeByteArray(decodedHuella, 0, decodedHuella.length);
+            // Guardamos los datos en cada uno de los elementos
+            txtCompanyID.setText(employee.getEmpresa());
+            txtEmployeeFullname.setText(employee.getNombre());
+            txtEmployeeNumber.setText(employee.getLegajo());
+            ivFingerPrint.setImageBitmap(bmpHuella);
+            // Ocultamos el boton de lectura de huella, al modificar un empleado no es lógico modificar la huella
+            btnScanear.setVisibility(View.INVISIBLE);
+            ivFingerPrint.setVisibility(View.INVISIBLE);
+            // Establecemos el modo de guardado en modificacion
+            // Cambiamos el titulo de la activity
+            setTitle(R.string.title_activity_modify);
+            modifyEmployee = true;
+            // Habilitamos el botón de guardar
+            btnGuardar.setEnabled(true);
+            return true;
+        }
+        return false;
+    }
 
+    public void btnGuardarOnClickHandler(View view){
+        if(modifyEmployee){
+            ActualizarEmpleado();
+        } else {
+            GuardarEmpleado();
+        }
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -101,7 +155,6 @@ public class Enroll extends Activity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
     public void TimerStop(){
         if (mTimer!=null){
@@ -128,16 +181,51 @@ public class Enroll extends Activity {
         if(mTimer!=null && mTimerTask!=null)
             mTimer.schedule(mTimerTask,50,50);
     }
-    public void guardarenDB(String content){
+    private void GuardarEmpleado(){
         try {
-            TextView nombre = findViewById(R.id.txtEmployeFullname);
-            TextView legajo = findViewById(R.id.txtEmployeeNumber);
+            if(FingerData == NO_FINGER_DATA) throw new Exception("No es posible guardar el empleado sin tomar la huella");
+            // Recolectamos todos los elementos de vista
+            TextView tvNombre = findViewById(R.id.txtEmployeFullname);
+            TextView tvLegajo = findViewById(R.id.txtEmployeeNumber);
+            TextView tvEmpresa = findViewById(R.id.txtCompanyID);
+            // Instanciamos una nueva instancia de ayudante de base de datos
             EmpleadosDbHelper emp = new EmpleadosDbHelper(getApplicationContext());
-            emp.saveEmpleado(new Empleado(nombre.getText().toString(),legajo.getText().toString(), content));
-
+            // Separamos los strings para su posterior grabado
+            String empNombre = tvNombre.getText().toString();
+            String empEmpresa = tvEmpresa.getText().toString();
+            String empLegajo = tvLegajo.getText().toString();
+            // Generamos unn nuevo empleado con todos los datos necesarios
+            Empleado newEmployee = new Empleado(empEmpresa, empNombre, empLegajo, FingerData);
+            // Guardamos el empleado en la base de datos
+            emp.saveEmpleado(newEmployee);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
 
+    // Metodo dispuesto para actualizar el empleado en la base de datos
+    private void ActualizarEmpleado(){
+        try{
+            // Recolectamos los items que serán actualizados
+            TextView tvNombre = (TextView) findViewById(R.id.txtEmployeFullname);
+            TextView tvLegajo = (TextView) findViewById(R.id.txtEmployeeNumber);
+            TextView tvEmpresa = (TextView) findViewById(R.id.txtCompanyID);
+            // Guardamos los datos de las etiquetas en strings
+            String strNombre = tvNombre.getText().toString();
+            String strLegajo = tvLegajo.getText().toString();
+            String strEmpresa = tvEmpresa.getText().toString();
+            // Generamos un nuevo empleado
+            Empleado updateEmployee = new Empleado(strEmpresa, strNombre, strLegajo, null );
+            // Generamos un nuevo objeto de ayudante de base de datos
+            EmpleadosDbHelper empDB = new EmpleadosDbHelper(getApplicationContext());
+            // Actualizamos la base de datos
+            empDB.UpdateEmpleado(updateEmployee);
+            // Preparamos la nueva actividad donde muestre nuevamente el listado de empleados
+            Intent intentVerEmpleados = new Intent(this, VerEmpleados.class);
+            // Iniciamos la actividad basada en este intent
+            startActivity(intentVerEmpleados);
+        } catch(Exception e){
+            e.printStackTrace();
         }
     }
     private void initHandler(){
@@ -181,7 +269,15 @@ public class Enroll extends Activity {
 
 
                                         if(enrolCount>=(ENROL_NUM)){
-                                            guardarenDB(Base64.encodeToString(refdata,0));
+                                            // Guardamos el dato de la huella en una variable
+                                            FingerData = Base64.encodeToString(refdata,0);
+                                            // Obtenemos el boton guardar
+                                            Button btnGuardar = (Button) findViewById(R.id.btnGuardar);
+                                            Button btnScanear = (Button) findViewById(R.id.btnScanear);
+                                            // Habilitamos el botón guardar y deshabilitamos el botón scanear
+                                            btnGuardar.setEnabled(true);
+                                            btnScanear.setEnabled(false);
+                                            // guardarenDB(Base64.encodeToString(refdata,0));
                                             Toast.makeText(getApplicationContext(),"Se ha tomado la Huella con exito",Toast.LENGTH_SHORT).show();
                                         }else{
                                             Toast.makeText(getApplicationContext(),"Quite el Dedo",Toast.LENGTH_SHORT).show();

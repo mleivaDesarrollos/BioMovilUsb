@@ -729,8 +729,8 @@ id ifRoom
 id image
 id imageView1
 id img
+id imgDelete
 id imgModify
-id imgdelete
 id info
 id invisible
 id italic
@@ -916,6 +916,9 @@ string app_name
 string app_titel
 string button_read_fingerprint
 string button_save_new_enroll
+string dialog_accept
+string dialog_cancel
+string dialog_employee_delete
 string enrol_txt
 string hint_company_number
 string hint_employee_fullname
@@ -938,6 +941,7 @@ string search_menu_title
 string status
 string status_bar_notification_info_overflow
 string title_activity_enrol
+string title_activity_modify
 string title_activity_ver_empleados
 string txt_bt1
 string txt_bt10
