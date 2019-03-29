@@ -1,14 +1,21 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
-        android:id="@+id/action_enrol"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/enrol_txt"/>
+        android:id="@+id/mnu_show_employees"
+        android:orderInCategory="102"
+        android:title="@string/menu_show_employees" />
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="101"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:id="@+id/mnu_show_companys"
+        android:orderInCategory="103"
+        android:title="@string/menu_show_companys" />
+    <item
+        android:id="@+id/mnu_new_employee"
+        android:orderInCategory="104"
+        android:title="@string/menu_new_employee" />
+    <item
+        android:id="@+id/mnu_new_company"
+        android:orderInCategory="105"
+        android:title="@string/menu_new_company" />
 
 
 </menu>

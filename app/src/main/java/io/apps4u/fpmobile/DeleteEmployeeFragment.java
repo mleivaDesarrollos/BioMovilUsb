@@ -6,7 +6,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
+
+import io.apps4u.fpdatabase.Empleado;
+import io.apps4u.fpdatabase.EmpleadosDbHelper;
 
 public class DeleteEmployeeFragment extends DialogFragment {
     @Override
@@ -16,7 +18,7 @@ public class DeleteEmployeeFragment extends DialogFragment {
         // Generamos un nuevo dialogo
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Almacenamos el mensaje en conjunto con el legajo
-        String messageDialog = getResources().getString(R.string.dialog_employee_delete);
+        String messageDialog = getResources().getString(R.string.dialog_delete);
         messageDialog += "\n" + employeeId;
         // Establecemos el mensaje
         builder.setMessage(messageDialog)
@@ -31,10 +33,10 @@ public class DeleteEmployeeFragment extends DialogFragment {
                         if(empDb.DeleteEmpleado(deleteEmployee)){
                             // Recolectamos la actividad actual
                             Activity currentActivity = getActivity();
-                            // Validamos si la actividad actual es instancia de VerEmpleados
-                            if(currentActivity instanceof VerEmpleados){
+                            // Validamos si la actividad actual es instancia de
+                            if(currentActivity instanceof ActivityShowEmployees){
                                 // Obtenemos la instancia de ver empleados de la actividad
-                                VerEmpleados actVerEmp = (VerEmpleados) currentActivity;
+                                ActivityShowEmployees actVerEmp = (ActivityShowEmployees) currentActivity;
                                 // Llamamos a la función de repoblar listado
                                 actVerEmp.LoadEmpleadosList();
                             }

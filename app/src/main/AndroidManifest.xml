@@ -16,16 +16,29 @@
         android:icon="@drawable/newlogo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity android:name=".Enroll" android:label="@string/title_activity_enrol" android:theme="@style/AppTheme" />
+        <activity android:name=".ActivityCompanyABM"
+            android:label="@string/title_new_conmpany"
+            android:theme="@style/AppTheme"/>
         <activity
-            android:name=".MainActivity"
+            android:name=".ActivityShowCompanys"
+            android:label="@string/title_show_companies"
+            android:parentActivityName=".ActivityMain"
+            android:theme="@style/AppTheme"
+            >
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ActivityMain"/>
+        </activity>
+        <activity
+            android:name=".ActivityEmployeeABM"
+            android:label="@string/title_activity_enrol"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ActivityMain"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_titel"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -37,9 +50,12 @@
                 android:resource="@xml/device_filter" />
         </activity>
         <activity
-            android:name=".VerEmpleados"
+            android:name=".ActivityShowEmployees"
             android:label="@string/title_activity_ver_empleados"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".ActivityMain">
+            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ActivityMain"/>
+        </activity>
     </application>
 
 </manifest>

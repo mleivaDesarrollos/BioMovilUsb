@@ -22,6 +22,19 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
+            android:name="io.apps4u.fpmobile.CompanyABMActivity"
+            android:label="@string/title_new_conmpany"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="io.apps4u.fpmobile.ShowCompanysActivity"
+            android:label="@string/title_show_companies"
+            android:parentActivityName="io.apps4u.fpmobile.MainActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
             android:name="io.apps4u.fpmobile.Enroll"
             android:label="@string/title_activity_enrol"
             android:theme="@style/AppTheme" />
@@ -47,7 +60,12 @@
         <activity
             android:name="io.apps4u.fpmobile.VerEmpleados"
             android:label="@string/title_activity_ver_empleados"
-            android:theme="@style/AppTheme" />
+            android:parentActivityName="io.apps4u.fpmobile.MainActivity"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
 
         <meta-data
             android:name="android.support.VERSION"

@@ -3,8 +3,6 @@
 
     <string name="app_name">Work4U Bio Móvil</string>
     <string name="app_titel">Work4U Bio Móvil</string>
-    <string name="action_settings">Usuarios</string>
-    <string name="enrol_txt">Nuevo Usuario</string>
     <string name="status">Abra el Lector</string>
     <string name="txt_status"></string>
     <string name="txt_bt1">Conectar Lector</string>
@@ -25,12 +23,24 @@
     <string name="hint_employee_fullname">Nombre y apellido</string>
     <string name="button_read_fingerprint">Leer Huella</string>
     <string name="button_save_new_enroll">Guardar Empleado</string>
+    <!--Strings related to new Company-->
+    <string name="title_new_conmpany">Nueva Empresa</string>
+    <string name="title_modify_company">Modificar Empresa</string>
+    <string name="title_show_companies">Listado de Empresas</string>
+    <string name="hint_company_id">ID de Compañía</string>
+    <string name="hint_company_name">Nombre de Compañía</string>
+    <string name="button_company_save_changes">Guardar cambios</string>
     <!--Strings related to dialog boxes-->
-    <string name="dialog_employee_delete">¿Estás seguro de eliminarlo?</string>
-
+    <string name="dialog_delete">¿Estás seguro de eliminarlo?</string>
     <string name="dialog_accept">Aceptar</string>
     <string name="dialog_cancel">Cancelar</string>
-
+    <!--Strings related to menu-->
+    <string name="menu_show_employees">Usuarios</string>
+    <string name="menu_new_employee">Nuevo Usuario</string>
+    <string name="menu_show_companys">Empresas</string>
+    <string name="menu_new_company">Nueva Empresa</string>
+    <!--String for fill space on view design-->
+    <string name="placeholder">placeholder</string>
 
     <!-- Strings related to Settings -->
 

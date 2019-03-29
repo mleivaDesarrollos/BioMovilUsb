@@ -1,14 +1,11 @@
-package com.fgtit.fpcore;
+package io.fgtit.fpcore;
 
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.database.Cursor;
 import android.util.Base64;
-import android.widget.Toast;
 
-import io.apps4u.fpmobile.EmpleadoDB;
-import io.apps4u.fpmobile.EmpleadosDbHelper;
-import io.apps4u.fpmobile.MainActivity;
+import io.apps4u.fpdatabase.EmpleadoDB;
+import io.apps4u.fpdatabase.EmpleadosDbHelper;
 
 public class FPMatch {
 
