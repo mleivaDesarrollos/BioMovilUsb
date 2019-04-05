@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.widget.ListView;
 
 import io.apps4u.fpdatabase.EmpleadoDB;
-import io.apps4u.fpdatabase.EmpleadosDbHelper;
 
 public class ActivityShowEmployees extends Activity {
 
@@ -20,7 +19,7 @@ public class ActivityShowEmployees extends Activity {
 
     public void LoadEmpleadosList(){
         // Obtenemos la instancia de base de datos almacenada en el dispositivo
-        EmpleadosDbHelper em = new EmpleadosDbHelper(getApplicationContext());
+        EmpleadoDB em = new EmpleadoDB(getApplicationContext());
         // Llamamos a la función para levantar todos los empleados almacenados en la base local
         Cursor c = em.getTodosEmpleados();
         // Generamos un array de tres elementos con cada uno de los componentes
@@ -29,9 +28,9 @@ public class ActivityShowEmployees extends Activity {
         String legajo[] = new String[c.getCount()];
         // Iteramos sobre el total de componentes recolectados en la base de datos
         while (c.moveToNext()){
-            nombre[c.getPosition()] = c.getString(c.getColumnIndex(EmpleadoDB.EmpleadoRow.Nombre));
-            huella[c.getPosition()] = c.getString(c.getColumnIndex(EmpleadoDB.EmpleadoRow.Huella));
-            legajo[c.getPosition()] = c.getString(c.getColumnIndex(EmpleadoDB.EmpleadoRow.Legajo));
+            nombre[c.getPosition()] = c.getString(c.getColumnIndex(EmpleadoDB.TableDefinition.Nombre));
+            huella[c.getPosition()] = c.getString(c.getColumnIndex(EmpleadoDB.TableDefinition.FINGERPRINT));
+            legajo[c.getPosition()] = c.getString(c.getColumnIndex(EmpleadoDB.TableDefinition.LEGAJO));
         }
         // Se genera un adaptador basado la vista de empleados
         ViewEmployeeList adapter = new

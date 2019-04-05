@@ -22,7 +22,7 @@ import java.util.TimerTask;
 
 import fgtit.fpengine.fpdevice;
 import io.apps4u.fpdatabase.Empleado;
-import io.apps4u.fpdatabase.EmpleadosDbHelper;
+import io.apps4u.fpdatabase.EmpleadoDB;
 
 public class ActivityEmployeeABM extends Activity {
     private static final String NO_FINGER_DATA = "NONE";
@@ -47,7 +47,6 @@ public class ActivityEmployeeABM extends Activity {
     private byte matdata[]=new byte[256];
     private Handler handler=null;
     public static final String ACTION_USB_PERMISSION = "io.apps4u.fpmobile.USB";
-    private Button btnOpen,btnClose,btnEnrol;
     private ImageView ivImage=null;
     private boolean modifyEmployee = false;
     private String FingerData = NO_FINGER_DATA;
@@ -55,7 +54,7 @@ public class ActivityEmployeeABM extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_enroll);
+        setContentView(R.layout.activity_employee_abm);
         if(!isModifyRequest()){
             ivImage= (ImageView)findViewById(R.id.fpImage);
             Button btnScanear = findViewById(R.id.btnScanear);
@@ -101,13 +100,13 @@ public class ActivityEmployeeABM extends Activity {
         // Validamos si el intent viene con legajo
         if(intent.hasExtra("legajo")){
             // Generamos una nueva instancia del contexto
-            EmpleadosDbHelper dbInstance = new EmpleadosDbHelper(getApplicationContext());
+            EmpleadoDB dbInstance = new EmpleadoDB(getApplicationContext());
             // Separamos el legajo y lo almacenamos en un string
             String strLegajo = intent.getStringExtra("legajo");
             // Obtenemos el empleado desde la base de datos
             Empleado employee = dbInstance.GetEmpleado(strLegajo);
             // Mostramos los datos del empleado en cada uno de los campos
-            EditText txtCompanyID = (EditText) findViewById(R.id.txtCompanyID);
+            // EditText txtCompanyID = (EditText) findViewById(R.id.txtCompanyID);
             EditText txtEmployeeFullname = (EditText) findViewById(R.id.txtEmployeFullname);
             EditText txtEmployeeNumber = (EditText) findViewById(R.id.txtEmployeeNumber);
             ImageView ivFingerPrint = (ImageView) findViewById(R.id.fpImage);
@@ -120,7 +119,7 @@ public class ActivityEmployeeABM extends Activity {
             // Generamos un bitmap a partir de los bytes
             Bitmap bmpHuella = BitmapFactory.decodeByteArray(decodedHuella, 0, decodedHuella.length);
             // Guardamos los datos en cada uno de los elementos
-            txtCompanyID.setText(employee.getEmpresa());
+            //txtCompanyID.setText(employee.getEmpresa());
             txtEmployeeFullname.setText(employee.getNombre());
             txtEmployeeNumber.setText(employee.getLegajo());
             ivFingerPrint.setImageBitmap(bmpHuella);
@@ -185,19 +184,18 @@ public class ActivityEmployeeABM extends Activity {
     }
     private void GuardarEmpleado(){
         try {
-            if(FingerData == NO_FINGER_DATA) throw new Exception("No es posible guardar el empleado sin tomar la huella");
+            //if(FingerData == NO_FINGER_DATA) throw new Exception("No es posible guardar el empleado sin tomar la huella");
             // Recolectamos todos los elementos de vista
             TextView tvNombre = findViewById(R.id.txtEmployeFullname);
             TextView tvLegajo = findViewById(R.id.txtEmployeeNumber);
-            TextView tvEmpresa = findViewById(R.id.txtCompanyID);
             // Instanciamos una nueva instancia de ayudante de base de datos
-            EmpleadosDbHelper emp = new EmpleadosDbHelper(getApplicationContext());
+            EmpleadoDB emp = new EmpleadoDB(getApplicationContext());
             // Separamos los strings para su posterior grabado
             String empNombre = tvNombre.getText().toString();
-            String empEmpresa = tvEmpresa.getText().toString();
+            //String empEmpresa = tvEmpresa.getText().toString();
             String empLegajo = tvLegajo.getText().toString();
             // Generamos unn nuevo empleado con todos los datos necesarios
-            Empleado newEmployee = new Empleado(empEmpresa, empNombre, empLegajo, FingerData);
+            Empleado newEmployee = new Empleado("alguna empresa", empNombre, empLegajo, "alguna huella");
             // Guardamos el empleado en la base de datos
             emp.saveEmpleado(newEmployee);
         } catch (Exception e) {
@@ -211,15 +209,14 @@ public class ActivityEmployeeABM extends Activity {
             // Recolectamos los items que serán actualizados
             TextView tvNombre = (TextView) findViewById(R.id.txtEmployeFullname);
             TextView tvLegajo = (TextView) findViewById(R.id.txtEmployeeNumber);
-            TextView tvEmpresa = (TextView) findViewById(R.id.txtCompanyID);
             // Guardamos los datos de las etiquetas en strings
             String strNombre = tvNombre.getText().toString();
             String strLegajo = tvLegajo.getText().toString();
-            String strEmpresa = tvEmpresa.getText().toString();
+            // String strEmpresa = tvEmpresa.getText().toString();
             // Generamos un nuevo empleado
-            Empleado updateEmployee = new Empleado(strEmpresa, strNombre, strLegajo, null );
+            Empleado updateEmployee = new Empleado("null", strNombre, strLegajo, null );
             // Generamos un nuevo objeto de ayudante de base de datos
-            EmpleadosDbHelper empDB = new EmpleadosDbHelper(getApplicationContext());
+            EmpleadoDB empDB = new EmpleadoDB(getApplicationContext());
             // Actualizamos la base de datos
             empDB.UpdateEmpleado(updateEmployee);
             // Preparamos la nueva actividad donde muestre nuevamente el listado de empleados
@@ -280,7 +277,7 @@ public class ActivityEmployeeABM extends Activity {
                                             btnGuardar.setEnabled(true);
                                             btnScanear.setEnabled(false);
                                             // guardarenDB(Base64.encodeToString(refdata,0));
-                                            Toast.makeText(getApplicationContext(),"Se ha tomado la Huella con exito",Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(),"Se ha tomado la FINGERPRINT con exito",Toast.LENGTH_SHORT).show();
                                         }else{
                                             Toast.makeText(getApplicationContext(),"Quite el Dedo",Toast.LENGTH_SHORT).show();
                                             TimerStart();
@@ -314,7 +311,7 @@ public class ActivityEmployeeABM extends Activity {
                                     }
 
                                     System.arraycopy(tpdata,0,matdata,0,256);
-                                    Toast.makeText(getApplicationContext(),"Se ha tomado la Huella con exito",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(),"Se ha tomado la FINGERPRINT con exito",Toast.LENGTH_SHORT).show();
                                     //if(FPMatch.getInstance().MatchTemplateOne(refdata, matdata,60)){
                                     if(io.fgtit.fpcore.FPMatch.getInstance().MatchTemplateW4u(refdata, matdata,60,getApplicationContext())){
                                         // agregar el post a la fichada

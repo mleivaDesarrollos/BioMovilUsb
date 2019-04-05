@@ -8,7 +8,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import io.apps4u.fpdatabase.Empleado;
-import io.apps4u.fpdatabase.EmpleadosDbHelper;
+import io.apps4u.fpdatabase.EmpleadoDB;
 
 public class DeleteEmployeeFragment extends DialogFragment {
     @Override
@@ -26,7 +26,7 @@ public class DeleteEmployeeFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // Generamos una nueva instancia de la base de datos
-                        EmpleadosDbHelper empDb = new EmpleadosDbHelper(getActivity().getApplicationContext());
+                        EmpleadoDB empDb = new EmpleadoDB(getActivity().getApplicationContext());
                         // Instanciamos un nuevo objeto empleado
                         Empleado deleteEmployee = new Empleado("", "", employeeId, "");
                         // Enviamos la petición de eliminación a la base de datos

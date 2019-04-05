@@ -1,21 +1,18 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/mnu_show_employees"
+        android:icon="@android:drawable/ic_menu_my_calendar"
         android:orderInCategory="102"
-        android:title="@string/menu_show_employees" />
-    <item
-        android:id="@+id/mnu_show_companys"
-        android:orderInCategory="103"
-        android:title="@string/menu_show_companys" />
+        android:title="@string/menu_show_employees"
+        app:showAsAction="always" />
     <item
         android:id="@+id/mnu_new_employee"
+        android:icon="@android:drawable/ic_menu_add"
         android:orderInCategory="104"
-        android:title="@string/menu_new_employee" />
-    <item
-        android:id="@+id/mnu_new_company"
-        android:orderInCategory="105"
-        android:title="@string/menu_new_company" />
+        android:title="@string/menu_new_employee"
+        app:showAsAction="always" />
 
 
 </menu>

@@ -17,6 +17,8 @@
     <string name="txt_fichafail">Error al verificar la huella</string>
     <string name="title_activity_enrol">Nueva Persona</string>
     <string name="title_activity_modify">Modificar Persona</string>
+    <!--Strings related to login screen-->
+    <string name="login_title">Ingreso a W4u Bio Movil</string>
     <!--Strings related to new enroll-->
     <string name="hint_company_number">Numero de empresa</string>
     <string name="hint_employee_number">Legajo del empleado</string>
@@ -35,8 +37,8 @@
     <string name="dialog_accept">Aceptar</string>
     <string name="dialog_cancel">Cancelar</string>
     <!--Strings related to menu-->
-    <string name="menu_show_employees">Usuarios</string>
-    <string name="menu_new_employee">Nuevo Usuario</string>
+    <string name="menu_show_employees">Empleados</string>
+    <string name="menu_new_employee">Nuevo Empleado</string>
     <string name="menu_show_companys">Empresas</string>
     <string name="menu_new_company">Nueva Empresa</string>
     <!--String for fill space on view design-->
@@ -114,4 +116,17 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="title_activity_ver_empleados">Ver Empleados</string>
+    <string name="title_activity_login">W4U Bio Movil - Ingreso</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Ingresar o Registrar usuario</string>
+    <string name="action_sign_in_short">Ingresar</string>
+    <string name="error_invalid_email">El email ingresado no es correcto</string>
+    <string name="error_invalid_password">La contraseña es muy corta</string>
+    <string name="error_incorrect_password">La contraseña o el usuario es incorrecto</string>
+    <string name="error_field_required">Este campo es requerido</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
 </resources>

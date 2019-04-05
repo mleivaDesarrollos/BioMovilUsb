@@ -4,57 +4,65 @@
     android:versionCode="1"
     android:versionName="1.0">
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <uses-feature
         android:name="android.hardware.usb.host"
         android:required="true" />
     <uses-feature android:name="android.hardware.usb.accessory" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".Session"
         android:allowBackup="true"
         android:icon="@drawable/newlogo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityCompanyABM"
-            android:label="@string/title_new_conmpany"
-            android:theme="@style/AppTheme"/>
-        <activity
-            android:name=".ActivityShowCompanys"
-            android:label="@string/title_show_companies"
-            android:parentActivityName=".ActivityMain"
-            android:theme="@style/AppTheme"
-            >
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ActivityMain"/>
-        </activity>
-        <activity
-            android:name=".ActivityEmployeeABM"
-            android:label="@string/title_activity_enrol"
-            android:theme="@style/AppTheme" />
         <activity
             android:name=".ActivityMain"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/app_titel"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
-            </intent-filter>
-
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:parentActivityName=".ActivityMain">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="io.apps4u.fpmobile.ActivityMain" />
             <meta-data
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ActivityEmployeeABM"
+            android:label="@string/title_activity_enrol"
+            android:parentActivityName=".ActivityMain"
+            android:theme="@style/AppTheme" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ActivityMain" />
         </activity>
         <activity
             android:name=".ActivityShowEmployees"
             android:label="@string/title_activity_ver_empleados"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".ActivityMain">
-            <meta-data android:name="android.support.PARENT_ACTIVITY" android:value=".ActivityMain"/>
+            android:parentActivityName=".ActivityMain"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ActivityMain" />
         </activity>
     </application>
 

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,7 +20,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.apps4u.fpdatabase.Empleado;
-import io.apps4u.fpdatabase.EmpleadosDbHelper;
+import io.apps4u.fpdatabase.EmpleadoDB;
 import io.fgtit.fpcore.FPMatch;
 import fgtit.fpengine.fpdevice;
 import android.app.PendingIntent;
@@ -135,7 +136,6 @@ public class ActivityMain extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
 		/*FPMatch.getInstance().InitMatch(0, "https://www.hfteco.com");
 		
 		btnOpen=(Button)findViewById(R.id.button1);
@@ -383,6 +383,7 @@ public class ActivityMain extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
@@ -395,14 +396,6 @@ public class ActivityMain extends Activity {
                 Intent intentVerEmpleados = new Intent(this, ActivityShowEmployees.class);
                 this.startActivity(intentVerEmpleados);
                 break;
-            case R.id.mnu_new_company:
-                Intent intentNewCompany = new Intent(this, ActivityCompanyABM.class);
-                this.startActivity(intentNewCompany);
-                break;
-            case R.id.mnu_show_companys:
-                Intent intentShowCompanies = new Intent(this, ActivityShowCompanys.class);
-                this.startActivity(intentShowCompanies);
-                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -413,7 +406,7 @@ public class ActivityMain extends Activity {
 	public void writeTxtToFile(String content, String filename){
 		try {
 
-			EmpleadosDbHelper emp = new EmpleadosDbHelper(getApplicationContext());
+			EmpleadoDB emp = new EmpleadoDB(getApplicationContext());
 			emp.saveEmpleado(new Empleado("Mega","Jose", "61", content));
 			FileWriter fw = new FileWriter(sDirectory+"/"+filename+".txt");//SD卡中的路径
 			fw.flush();

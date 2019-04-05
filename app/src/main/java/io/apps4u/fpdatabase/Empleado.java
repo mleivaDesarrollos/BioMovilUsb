@@ -8,6 +8,10 @@ public class Empleado {
     private String huella;
     private String empresa;
 
+    public Empleado(){
+
+    }
+
     public  Empleado(String empresa, String nombre,String legajo,String huella){
         this.empresa = empresa;
         this.nombre = nombre;
@@ -27,13 +31,29 @@ public class Empleado {
         return nombre;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setLegajo(String legajo) {
+        this.legajo = legajo;
+    }
+
+    public void setHuella(String huella) {
+        this.huella = huella;
+    }
+
+    public void setEmpresa(String empresa) {
+        this.empresa = empresa;
+    }
+
     public String getEmpresa(){ return empresa;}
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
-        values.put(EmpleadoDB.EmpleadoRow.Nombre, nombre);
-        values.put(EmpleadoDB.EmpleadoRow.Legajo, legajo);
-        values.put(EmpleadoDB.EmpleadoRow.Huella, huella);
-        values.put(EmpleadoDB.EmpleadoRow.Empresa, empresa);
+        values.put(EmpleadoDB.TableDefinition.Nombre, nombre);
+        values.put(EmpleadoDB.TableDefinition.LEGAJO, legajo);
+        values.put(EmpleadoDB.TableDefinition.FINGERPRINT, huella);
+        values.put(EmpleadoDB.TableDefinition.Empresa, empresa);
 
         return values;
     }

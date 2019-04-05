@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.util.Base64;
 
 import io.apps4u.fpdatabase.EmpleadoDB;
-import io.apps4u.fpdatabase.EmpleadosDbHelper;
 
 public class FPMatch {
 
@@ -36,11 +35,11 @@ public class FPMatch {
 
 
 
-	    EmpleadosDbHelper em = new EmpleadosDbHelper(ctx);
+	    						EmpleadoDB em = new EmpleadoDB(ctx);
 								Cursor c = em.getTodosEmpleados();
 								while (c.moveToNext()){
-									String huelladb = c.getString(c.getColumnIndex(EmpleadoDB.EmpleadoRow.Huella));
-								    byte hu[] =  Base64.decode(huelladb,1);//c.getString(c.getColumnIndex(EmpleadoDB.EmpleadoRow.Huella)).getBytes();
+									String huelladb = c.getString(c.getColumnIndex(EmpleadoDB.TableDefinition.FINGERPRINT));
+								    byte hu[] =  Base64.decode(huelladb,1);//c.getString(c.getColumnIndex(EmpleadoDB.EmpleadoRow.FINGERPRINT)).getBytes();
                                     int n=hu.length/256;
                                     byte[] tmp=new byte[256];
                                     for(int i=0;i<n;i++){
