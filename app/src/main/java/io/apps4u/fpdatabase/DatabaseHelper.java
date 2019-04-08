@@ -31,19 +31,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + EmpleadoDB.TableDefinition.FULLNAME + " TEXT NOT NULL,"
                 + EmpleadoDB.TableDefinition.FINGERPRINT + " TEXT NOT NULL, " +
                 EmpleadoDB.TableDefinition.MANAGER_ID + " TEXT NOT NULL, " +
+                "PRIMARY KEY ("+ EmpleadoDB.TableDefinition.LEGAJO + "," + EmpleadoDB.TableDefinition.MANAGER_ID + ")," +
                 "CONSTRAINT FK_MANAGER " +
                 "FOREIGN KEY("+ EmpleadoDB.TableDefinition.MANAGER_ID + ") " +
                 "REFERENCES " + ManagerDB.TableDefinition.NAME + "(" + ManagerDB.TableDefinition.LEGAJO_ID + "))");
         sqLiteDatabase.execSQL("CREATE TABLE " + SignUpDB.TableDefinition.NAME + "(" +
-                SignUpDB.TableDefinition._ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 SignUpDB.TableDefinition.LEGAJO + " TEXT NOT NULL, " +
                 SignUpDB.TableDefinition.LATITUDE + " TEXT NOT NULL, " +
                 SignUpDB.TableDefinition.LONGITUDE + " TEXT NOT NULL, " +
                 SignUpDB.TableDefinition.DETAILS + " TEXT NOT NULL," +
                 SignUpDB.TableDefinition.ADDRESS + " TEXT NOT NULL, " +
-                SignUpDB.TableDefinition.TIMESTAMP + "TEXT NOT NULL, " +
-                " CONSTRAINT FK_EMPLOYEE FOREIGN KEY(" + SignUpDB.TableDefinition.LEGAJO +") " +
-                " REFERENCES " + EmpleadoDB.TableDefinition.NAME + "(" + EmpleadoDB.TableDefinition.LEGAJO + "))");
+                SignUpDB.TableDefinition.TIMESTAMP + " TEXT NOT NULL, " +
+                SignUpDB.TableDefinition.REGISTERED_ON_SERVER + " TEXT NOT NULL, " +
+                "CONSTRAINT FK_EMPLOYEE FOREIGN KEY(" + SignUpDB.TableDefinition.LEGAJO +") " +
+                "REFERENCES " + EmpleadoDB.TableDefinition.NAME + "(" + EmpleadoDB.TableDefinition.LEGAJO + "))");
     }
 
     @Override

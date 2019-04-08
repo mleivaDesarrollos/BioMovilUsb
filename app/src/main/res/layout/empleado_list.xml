@@ -29,32 +29,19 @@
         android:textColor="#ffff"
         android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/txtLegajo"
-        app:layout_constraintEnd_toStartOf="@+id/imgModify"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/txtLegajo" />
-
-    <ImageView
-        android:id="@+id/imgModify"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="16dp"
-        android:src="@android:drawable/ic_menu_edit"
-        app:layout_constraintEnd_toStartOf="@+id/imgDelete"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/txtNombre"
-        app:srcCompat="@android:drawable/ic_menu_edit"
-        tools:layout_editor_absoluteY="16dp" />
 
     <ImageView
         android:id="@+id/imgDelete"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:src="@android:drawable/ic_menu_delete"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imgModify"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/txtNombre"
+        tools:layout_editor_absoluteY="0dp" />
 
 
 </android.support.constraint.ConstraintLayout>

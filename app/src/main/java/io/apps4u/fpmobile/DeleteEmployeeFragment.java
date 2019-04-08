@@ -28,9 +28,14 @@ public class DeleteEmployeeFragment extends DialogFragment {
                         // Generamos una nueva instancia de la base de datos
                         EmpleadoDB empDb = new EmpleadoDB(getActivity().getApplicationContext());
                         // Instanciamos un nuevo objeto empleado
-                        Empleado deleteEmployee = new Empleado("", "", employeeId, "");
+                        Empleado deleteEmployee = new Empleado();
+                        // Levantamos los datos de session
+                        Session sessionInfo = (Session) getActivity().getApplication();
+                        // Aplicamos los parametros al elemento empleado
+                        deleteEmployee.set_legajo(employeeId);
+                        deleteEmployee.set_managerid(sessionInfo.loggedManager.get_legajoId());
                         // Enviamos la petición de eliminación a la base de datos
-                        if(empDb.DeleteEmpleado(deleteEmployee)){
+                        if(empDb.Delete(deleteEmployee)){
                             // Recolectamos la actividad actual
                             Activity currentActivity = getActivity();
                             // Validamos si la actividad actual es instancia de

@@ -5,6 +5,9 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
+import io.apps4u.fpdatabase.Empleado;
 import io.apps4u.fpdatabase.EmpleadoDB;
 
 public class ActivityShowEmployees extends Activity {
@@ -20,27 +23,34 @@ public class ActivityShowEmployees extends Activity {
     public void LoadEmpleadosList(){
         // Obtenemos la instancia de base de datos almacenada en el dispositivo
         EmpleadoDB em = new EmpleadoDB(getApplicationContext());
+        // Levantamos el objeto session almacenado en aplicacion
+        Session sessionInfo = (Session) getApplication();
         // Llamamos a la función para levantar todos los empleados almacenados en la base local
-        Cursor c = em.getTodosEmpleados();
-        // Generamos un array de tres elementos con cada uno de los componentes
-        String nombre[] = new String[c.getCount()];
-        String huella[] = new String[c.getCount()];
-        String legajo[] = new String[c.getCount()];
-        // Iteramos sobre el total de componentes recolectados en la base de datos
-        while (c.moveToNext()){
-            nombre[c.getPosition()] = c.getString(c.getColumnIndex(EmpleadoDB.TableDefinition.Nombre));
-            huella[c.getPosition()] = c.getString(c.getColumnIndex(EmpleadoDB.TableDefinition.FINGERPRINT));
-            legajo[c.getPosition()] = c.getString(c.getColumnIndex(EmpleadoDB.TableDefinition.LEGAJO));
-        }
-        // Se genera un adaptador basado la vista de empleados
-        ViewEmployeeList adapter = new
-                ViewEmployeeList(ActivityShowEmployees.this, nombre, huella,legajo);
+        ArrayList<Empleado> lstEmpleados = em.GetAll(sessionInfo.loggedManager.get_legajoId());
         // Recolectamos el ListView del activity
         ListView list=findViewById(R.id.lvEmpleados);
-        // Limpiamos el Adaptador del listado
-        list.setAdapter(null);
-        // Establecemos el adaptador sobre el listado
-        list.setAdapter(adapter);
+        // Disponemos las variables para modificar
+        if(lstEmpleados != null){
+            // Generamos un array de tres elementos con cada uno de los componentes
+            String nombre[] = new String[lstEmpleados.size()];
+            String huella[] = new String[lstEmpleados.size()];
+            String legajo[] = new String[lstEmpleados.size()];
+            // Iteramos sobre el total de componentes recolectados en la base de datos
+            for(int empleadoIndex = 0; empleadoIndex < lstEmpleados.size(); empleadoIndex++){
+                nombre[empleadoIndex] = lstEmpleados.get(empleadoIndex).get_fullname();
+                legajo[empleadoIndex] = lstEmpleados.get(empleadoIndex).get_legajo();
+            }
+            // Se genera un adaptador basado la vista de empleados
+            ViewEmployeeList adapter = new
+                    ViewEmployeeList(ActivityShowEmployees.this, nombre, huella,legajo);
+            // Limpiamos el Adaptador del listado
+            list.setAdapter(null);
+            // Establecemos el adaptador sobre el listado
+            list.setAdapter(adapter);
+        } else {
+            // Limpiamos el Adaptador del listado
+            list.setAdapter(null);
+        }
     }
 
 }

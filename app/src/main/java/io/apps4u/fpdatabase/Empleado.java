@@ -3,58 +3,61 @@ package io.apps4u.fpdatabase;
 import android.content.ContentValues;
 
 public class Empleado {
-    private String nombre;
-    private String legajo;
-    private String huella;
-    private String empresa;
+    private String _legajo;
 
-    public Empleado(){
+    private String _fullname;
 
+    private String _fingerprint;
+
+    private String _managerid;
+
+    public String get_legajo() {
+        return _legajo;
     }
 
-    public  Empleado(String empresa, String nombre,String legajo,String huella){
-        this.empresa = empresa;
-        this.nombre = nombre;
-        this.legajo = legajo;
-        this.huella = huella;
+    public void set_legajo(String _legajo) {
+        this._legajo = _legajo;
     }
 
-    public java.lang.String getHuella() {
-        return huella;
+    public String get_fullname() {
+        return _fullname;
     }
 
-    public java.lang.String getLegajo() {
-        return legajo;
+    public void set_fullname(String _fullname) {
+        this._fullname = _fullname;
     }
 
-    public java.lang.String getNombre() {
-        return nombre;
+    public String get_fingerprint() {
+        return _fingerprint;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void set_fingerprint(String _fingerprint) {
+        this._fingerprint = _fingerprint;
     }
 
-    public void setLegajo(String legajo) {
-        this.legajo = legajo;
+    public String get_managerid() {
+        return _managerid;
     }
 
-    public void setHuella(String huella) {
-        this.huella = huella;
+    public void set_managerid(String _managerid) {
+        this._managerid = _managerid;
     }
 
-    public void setEmpresa(String empresa) {
-        this.empresa = empresa;
+    public Empleado() { }
+
+    public Empleado(String paramLegajo, String paramFullname, String paramFingerprint, String paramManager){
+        _legajo = paramLegajo;
+        _fullname = paramFullname;
+        _fingerprint = paramFingerprint;
+        _managerid = paramManager;
     }
 
-    public String getEmpresa(){ return empresa;}
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
-        values.put(EmpleadoDB.TableDefinition.Nombre, nombre);
-        values.put(EmpleadoDB.TableDefinition.LEGAJO, legajo);
-        values.put(EmpleadoDB.TableDefinition.FINGERPRINT, huella);
-        values.put(EmpleadoDB.TableDefinition.Empresa, empresa);
-
+        values.put(EmpleadoDB.TableDefinition.LEGAJO, get_legajo());
+        values.put(EmpleadoDB.TableDefinition.FULLNAME, get_fullname());
+        values.put(EmpleadoDB.TableDefinition.FINGERPRINT, get_fingerprint());
+        values.put(EmpleadoDB.TableDefinition.MANAGER_ID, get_managerid());
         return values;
     }
 }

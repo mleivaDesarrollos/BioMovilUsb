@@ -25,5 +25,6 @@ public class SignUpDB extends SQLiteOpenHelper {
         public static final String DETAILS = "DETAILS";
         public static final String ADDRESS = "ADDRESS";
         public static final String TIMESTAMP = "TIMESTAMP";
+        public static final String REGISTERED_ON_SERVER = "REGISTERED_ON_SERVER";
     }
 }

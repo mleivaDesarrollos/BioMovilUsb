@@ -17,9 +17,9 @@ public class ViewEmployeeList extends ArrayAdapter<String> {
     private final String[] imageId;
     public ViewEmployeeList(Activity context,
                             String[] nombre, String[] imageId, String[] legajo) {
-        super(context, R.layout.empleado_list, nombre);
-        this.context = context;
-        this.nombre = nombre;
+        super(context, R.layout.empleado_list, nombre);this.context = context;
+        this
+        .nombre = nombre;
         this.imageId = imageId;
         this.legajo = legajo;
     }
@@ -33,7 +33,6 @@ public class ViewEmployeeList extends ArrayAdapter<String> {
         txtLeg.setText(legajo[position]);
         // Disponemos de las imagenes de edicion y eliminado para controlar el usuario
         ImageView ivDelete = rowView.findViewById(R.id.imgDelete);
-        ImageView ivModify = rowView.findViewById(R.id.imgModify);
         // Configuramos el event listener
         ivDelete.setOnClickListener(new View.OnClickListener() {
             final int pos = position;
@@ -50,21 +49,6 @@ public class ViewEmployeeList extends ArrayAdapter<String> {
                 deletingFragment.setArguments(arguments);
                 // Mostramos el fragmento en pantalla
                 deletingFragment.show(context.getFragmentManager(), "DeleteEmployee");
-            }
-        });
-        // Controlamos el click de la imagen en modificacion
-        ivModify.setOnClickListener(new View.OnClickListener() {
-            final int pos = position;
-            @Override
-            public void onClick(View view) {
-                // Generamos un intent para comunicarle la información requerida a la actividad nueva que se abrira
-                Intent intent = new Intent(context, ActivityEmployeeABM.class);
-                // Separamos la variable legajo para levantar el empleado en la página de enrolamiento
-                String legajoToModify = legajo[pos];
-                // Ingresamos el valor del legajo sobre el intent
-                intent.putExtra("legajo", legajoToModify);
-                // Iniciamos la actividad usando el intent
-                context.startActivity(intent);
             }
         });
         return rowView;

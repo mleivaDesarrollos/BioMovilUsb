@@ -691,6 +691,7 @@ id btnFichar
 id btnGuardar
 id btnLogin
 id btnScanear
+id btnValidatelegajo
 id buttonPanel
 id cancel_action
 id chains
@@ -723,7 +724,6 @@ id icon_group
 id ifRoom
 id image
 id imgDelete
-id imgModify
 id info
 id invisible
 id italic
@@ -910,9 +910,9 @@ string action_sign_in
 string action_sign_in_short
 string app_name
 string app_titel
-string button_company_save_changes
 string button_read_fingerprint
 string button_save_new_enroll
+string button_validate_legajo
 string dialog_accept
 string dialog_cancel
 string dialog_delete
@@ -920,9 +920,6 @@ string error_field_required
 string error_incorrect_password
 string error_invalid_email
 string error_invalid_password
-string hint_company_id
-string hint_company_name
-string hint_company_number
 string hint_employee_fullname
 string hint_employee_number
 string login_title
@@ -955,9 +952,6 @@ string title_activity_enrol
 string title_activity_login
 string title_activity_modify
 string title_activity_ver_empleados
-string title_modify_company
-string title_new_conmpany
-string title_show_companies
 string txt_bt1
 string txt_bt10
 string txt_bt11
