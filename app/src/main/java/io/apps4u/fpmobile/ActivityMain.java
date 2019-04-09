@@ -1,5 +1,12 @@
 package io.apps4u.fpmobile;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -18,15 +25,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.FileWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.apps4u.fpdatabase.Coordinate;
 import io.apps4u.fpdatabase.Empleado;
 import io.apps4u.fpdatabase.EmpleadoDB;
-import io.fgtit.fpcore.FPMatch;
+import com.fgtit.fpcore.FPMatch;
 import fgtit.fpengine.fpdevice;
+import io.apps4u.fpdatabase.SignUp;
+import io.apps4u.fpdatabase.SignUpDB;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -46,6 +61,10 @@ public class ActivityMain extends Activity {
     public static final int WORKTYPE_MATCH = 2;
     public static final int ENROL_NUM = 4;
 
+    private static final String ADDRESS_NOT_FOUND = "Dirección no localizada";
+    private static final String SOURCE_ENROLL = "Fichada bajo W4U Bio Movíl";
+
+    private static final DateFormat FORMATDATE_W4U = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
     private static fpdevice fpdev = new fpdevice();
 
@@ -261,6 +280,22 @@ public class ActivityMain extends Activity {
 	    });
 		
 		btnOpen.callOnClick();*/
+        ValidateGPSPermission();
+    }
+
+    @SuppressLint("NewApi")
+    private void ValidateGPSPermission(){
+        if(!hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)){
+            requestPermissions( new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
+        }
+        if(!hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION)){
+            requestPermissions( new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},1);
+        }
+    }
+
+    @SuppressLint("NewApi")
+    private boolean hasPermission(String perm){
+        return (PackageManager.PERMISSION_GRANTED == checkSelfPermission(perm));
     }
 
     private void initHandler() {
@@ -331,9 +366,18 @@ public class ActivityMain extends Activity {
                                         }
 
                                         System.arraycopy(tpdata, 0, matdata, 0, 256);
-                                        if (FPMatch.getInstance().MatchTemplateW4u(refdata, matdata, 60, getApplicationContext(), getApplication())) {
-                                            // agregar el post a la fichada
-                                            Toast.makeText(getApplicationContext(), R.string.txt_fichaok, Toast.LENGTH_SHORT).show();
+                                        // Tratamos de obtener el empleado relacionado a la consulta
+                                        Empleado employee = FPMatch.getInstance().MatchTemplateW4u(refdata, matdata, 60, getApplicationContext(), getApplication());
+                                        if (employee != null) {
+                                            try{
+                                                // Registramos la fichada
+                                                registerMatchEmployee(employee);
+                                                // agregar el post a la fichada
+                                                Toast.makeText(getApplicationContext(), R.string.txt_fichaok, Toast.LENGTH_SHORT).show();
+                                            } catch(SecurityException e) {
+                                                // En caso de que exista error de permisos
+                                                Toast.makeText(getApplicationContext(), R.string.error_gps_not_available, Toast.LENGTH_SHORT).show();
+                                            }
                                         } else {
                                             Toast.makeText(getApplicationContext(), R.string.txt_fichafail, Toast.LENGTH_SHORT).show();
                                         }
@@ -351,6 +395,86 @@ public class ActivityMain extends Activity {
             }
         };
     }
+
+    // Registramos los datos del empleado en la base de datos
+    private void registerMatchEmployee(Empleado emp){
+        // Generamos un nuevo objeto signup
+        SignUp newSignIn = new SignUp();
+        // Establecemos el legajo del usuario fichado
+        newSignIn.set_legajo(emp.get_legajo());
+        // Levantamos las coordenadas
+        Coordinate currentLocation = GetCurrentCoordinates();
+        // Establecemos coordenadas
+        newSignIn.set_coordinates(currentLocation);
+        // Establecemos los comentarios
+        newSignIn.set_details(SOURCE_ENROLL);
+        // Establecemos las direcciones
+        newSignIn.set_address(GetAddress(currentLocation));
+        // Configuramos el horario de la fichada
+        newSignIn.set_timestamp(FORMATDATE_W4U.format((new Date())));
+        // TODO AQUI IRIA LA VALIDACION ONLINE
+        // Levantamos la instancia de base de datos local para almacenar los resultados de la fichada
+        SignUpDB suDB = new SignUpDB(getApplicationContext());
+        // Guardamos el signup en la base de datos
+        suDB.Add(newSignIn);
+    }
+
+    // Obtenemos las coordenadas del dispositivo
+    private Coordinate GetCurrentCoordinates(){
+        try{
+            // Generamos un nuevo objeto
+            Coordinate coordinate = new Coordinate();
+            // Levantamos el LocationManager
+            LocationManager lmCurrent = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+            // Levantamos la ubicacion
+            Location location = lmCurrent.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            // Validamos si la location es nula (si es nula es que no tiene acceso al satelite en este momento
+            if(location != null ){
+                coordinate.set_latitude(location.getLatitude());
+                coordinate.set_longitude(location.getLongitude());
+            } else {
+                // Seleccionamos el proveedor
+                String provider = lmCurrent.getBestProvider(new Criteria(), true);
+                // Levantamos la ubicación
+                location = lmCurrent.getLastKnownLocation(provider);
+                if(location != null){
+                    coordinate.set_latitude(location.getLatitude());
+                    coordinate.set_longitude(location.getLongitude());
+                }
+            }
+            // Devolvemos las coordenadas
+            return coordinate;
+        } catch(SecurityException e){
+            throw e;
+        }
+    }
+
+    // Obtenemos direcciones basadas en coordenadas geográficas
+    private String GetAddress(Coordinate fetchingCoordinates){
+        try{
+            // Levantamos los métodos de geo
+            Geocoder geo = new Geocoder(getApplicationContext(), Locale.getDefault());
+            // Levantamos la lista de direcciones
+            List<Address> addresses = geo.getFromLocation(fetchingCoordinates.get_latitude(), fetchingCoordinates.get_longitude(),1);
+            // Validamos si existen resultados en la consulta
+            if(addresses.isEmpty()){
+                return ADDRESS_NOT_FOUND;
+            } else if(addresses.size() > 0){
+                // Si hay resultados, los mostramos en pantalla
+                Address reqAddress = addresses.get(0);
+                // Descomponemos el string en varios elementos para poder mostrarlos
+                String strStreet = reqAddress.getThoroughfare();
+                String strStreetNumber = reqAddress.getSubThoroughfare();
+                String strProvince = reqAddress.getAdminArea();
+                String strCountry = reqAddress.getCountryName();
+                return strStreet + " " + strStreetNumber + ", " + strProvince + ", " + strCountry + ".";
+            }
+        } catch(Exception e){
+            // Es posible que no devuelva resultados
+        }
+        return ADDRESS_NOT_FOUND;
+    }
+
 
     public void TimerStart() {
         if (mTimer == null) {

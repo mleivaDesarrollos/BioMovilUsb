@@ -3,15 +3,15 @@ package io.apps4u.fpdatabase;
 public class SignUp {
     private String _legajo;
 
-    private String _latitude;
-
-    private String _longitude;
+    private Coordinate _coordinates;
 
     private String _details;
 
     private String _address;
 
     private String _timestamp;
+
+    private boolean _registered_on_server;
 
     public String get_legajo() {
         return _legajo;
@@ -21,20 +21,12 @@ public class SignUp {
         this._legajo = _legajo;
     }
 
-    public String get_latitude() {
-        return _latitude;
+    public Coordinate get_coordinates() {
+        return _coordinates;
     }
 
-    public void set_latitude(String _latitude) {
-        this._latitude = _latitude;
-    }
-
-    public String get_longitude() {
-        return _longitude;
-    }
-
-    public void set_longitude(String _longitude) {
-        this._longitude = _longitude;
+    public void set_coordinates(Coordinate _coordinates) {
+        this._coordinates = _coordinates;
     }
 
     public String get_details() {
@@ -59,5 +51,13 @@ public class SignUp {
 
     public void set_timestamp(String _timestamp) {
         this._timestamp = _timestamp;
+    }
+
+    public boolean is_registered_on_server() {
+        return _registered_on_server;
+    }
+
+    public void set_registered_on_server(boolean _registered_on_server) {
+        this._registered_on_server = _registered_on_server;
     }
 }

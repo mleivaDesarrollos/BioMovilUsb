@@ -1,4 +1,4 @@
-package io.fgtit.fpcore;
+package com.fgtit.fpcore;
 
 import android.app.Application;
 import android.content.Context;
@@ -39,7 +39,7 @@ public class FPMatch {
         return false;
     }
 
-    public boolean MatchTemplateW4u(byte[] piEnl, byte[] piMat, int score, Context ctx, Application apc) {
+    public Empleado MatchTemplateW4u(byte[] piEnl, byte[] piMat, int score, Context ctx, Application apc) {
         try{
             EmpleadoDB em = new EmpleadoDB(ctx);
             // Levantamos los datos de session
@@ -55,14 +55,14 @@ public class FPMatch {
                     System.arraycopy(hu, i * 256, tmp, 0, 256);
                     int cal = MatchTemplate(tmp, piMat);
                     if (cal >= score) {
-                        return true;
+                        return employee;
                     }
                 }
             }
-            return false;
+            return null;
         }catch(Exception e){
             Log.e("ErrorMatch", e.getMessage());
-            return false;
+            return null;
         }
     }
 

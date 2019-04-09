@@ -917,6 +917,7 @@ string dialog_accept
 string dialog_cancel
 string dialog_delete
 string error_field_required
+string error_gps_not_available
 string error_incorrect_password
 string error_invalid_email
 string error_invalid_password

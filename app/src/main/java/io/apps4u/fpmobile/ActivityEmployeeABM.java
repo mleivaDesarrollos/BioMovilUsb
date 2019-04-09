@@ -297,7 +297,7 @@ public class ActivityEmployeeABM extends Activity {
                                     System.arraycopy(tpdata, 0, matdata, 0, 256);
                                     Toast.makeText(getApplicationContext(), "Se ha tomado la FINGERPRINT con exito", Toast.LENGTH_SHORT).show();
                                     //if(FPMatch.getInstance().MatchTemplateOne(refdata, matdata,60)){
-                                    if (io.fgtit.fpcore.FPMatch.getInstance().MatchTemplateW4u(refdata, matdata, 60, getApplicationContext(), getApplication())) {
+                                    if (com.fgtit.fpcore.FPMatch.getInstance().MatchTemplateW4u(refdata, matdata, 60, getApplicationContext(), getApplication()) != null) {
                                         // agregar el post a la fichada
                                         Toast.makeText(getApplicationContext(), R.string.txt_fichaok, Toast.LENGTH_SHORT).show();
 

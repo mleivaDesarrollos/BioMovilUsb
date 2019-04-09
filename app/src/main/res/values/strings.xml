@@ -35,7 +35,8 @@
     <string name="menu_show_companys">Empresas</string>
     <string name="menu_new_company">Nueva Empresa</string>
     <!--String for fill space on view design-->
-    <string name="placeholder">placeholder</string>
+    <string name="placeholder">placeholder</string>.
+    <string name="error_gps_not_available">Es necesario permisos de GPS para registrar la fichada</string>
 
     <!-- Strings related to Settings -->
 
