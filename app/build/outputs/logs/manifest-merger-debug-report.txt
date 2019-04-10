@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-71:12
-INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-71:12
-INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-71:12
-INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-71:12
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-72:12
+INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-72:12
+INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-72:12
+INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-72:12
 MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\MDLei\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\0a459ae6fd48a2847f64f23c8823351f\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support:support-v4:26.1.0] C:\Users\MDLei\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\cc40f39cc7dce8a2d0d6a9556beb0349\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support.constraint:constraint-layout:1.1.3] C:\Users\MDLei\.gradle\caches\transforms-1\files-1.1\constraint-layout-1.1.3.aar\8610726e359021bfba25b0831fc09fad\AndroidManifest.xml:2:1-11:12
@@ -15,9 +15,9 @@ MERGED from [com.android.support:support-media-compat:26.1.0] C:\Users\MDLei\.gr
 MERGED from [com.android.support:support-core-utils:26.1.0] C:\Users\MDLei\.gradle\caches\transforms-1\files-1.1\support-core-utils-26.1.0.aar\65517a910204edde2697b0205085f49a\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support:support-compat:26.1.0] C:\Users\MDLei\.gradle\caches\transforms-1\files-1.1\support-compat-26.1.0.aar\bf50191486e9586f6eb90e7f396739fc\AndroidManifest.xml:17:1-31:12
 MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\MDLei\.gradle\caches\transforms-1\files-1.1\runtime-1.0.0.aar\a9ece96c635b7a5a2e604c6aa7f28424\AndroidManifest.xml:17:1-30:12
-INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-71:12
-INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-71:12
-INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-71:12
+INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-72:12
+INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-72:12
+INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-72:12
 	package
 		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:3:5-33
 		INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml
@@ -33,25 +33,29 @@ INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:2:1-71:12
 		INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml
 		INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml
 uses-permission#android.permission.GET_ACCOUNTS
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:7:5-71
+	android:name
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:7:22-68
+uses-permission#android.permission.READ_PROFILE
 ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:8:5-71
 	android:name
 		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:8:22-68
-uses-permission#android.permission.READ_PROFILE
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:9:5-71
-	android:name
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:9:22-68
 uses-permission#android.permission.READ_CONTACTS
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:10:5-72
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:9:5-72
 	android:name
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:10:22-69
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:9:22-69
 uses-permission#android.permission.ACCESS_FINE_LOCATION
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:11:5-78
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:10:5-79
 	android:name
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:11:22-76
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:10:22-76
 uses-permission#android.permission.ACCESS_COARSE_LOCATION
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:12:5-81
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:11:5-81
 	android:name
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:12:22-78
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:11:22-78
+uses-permission#android.permission.SYSTEM_ALERT_WINDOW
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:12:5-78
+	android:name
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:12:22-75
 uses-feature#android.hardware.usb.host
 ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:14:5-16:35
 	android:required
@@ -71,7 +75,7 @@ ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:20:5-81
 	android:name
 		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:20:22-78
 application
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:22:5-69:19
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:22:5-70:19
 MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\MDLei\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\0a459ae6fd48a2847f64f23c8823351f\AndroidManifest.xml:25:5-29:19
 MERGED from [com.android.support:appcompat-v7:26.1.0] C:\Users\MDLei\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.1.0.aar\0a459ae6fd48a2847f64f23c8823351f\AndroidManifest.xml:25:5-29:19
 MERGED from [com.android.support:support-v4:26.1.0] C:\Users\MDLei\.gradle\caches\transforms-1\files-1.1\support-v4-26.1.0.aar\cc40f39cc7dce8a2d0d6a9556beb0349\AndroidManifest.xml:25:5-29:19
@@ -105,7 +109,7 @@ MERGED from [android.arch.lifecycle:runtime:1.0.0] C:\Users\MDLei\.gradle\caches
 	android:name
 		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:23:9-32
 activity#io.apps4u.fpmobile.ActivityMain
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:28:9-34:20
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:28:9-33:56
 	android:screenOrientation
 		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:32:13-49
 	android:label
@@ -117,27 +121,27 @@ ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:28:9-34:20
 	android:name
 		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:29:13-41
 activity#io.apps4u.fpmobile.LoginActivity
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:35:9-50:20
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:34:9-51:20
 	android:parentActivityName
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:38:13-55
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:37:13-55
 	android:label
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:37:13-57
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:36:13-57
 	android:name
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:36:13-42
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:35:13-42
 meta-data#android.support.PARENT_ACTIVITY
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:39:13-41:67
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:38:13-40:67
 	android:value
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:41:17-64
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:40:17-64
 	android:name
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:40:17-63
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:39:17-63
 meta-data#android.hardware.usb.action.USB_DEVICE_ATTACHED
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:42:13-44:57
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:41:13-43:57
 	android:resource
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:44:17-54
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:43:17-54
 	android:name
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:43:17-79
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:42:17-79
 intent-filter#action:name:android.hardware.usb.action.USB_DEVICE_ATTACHED+action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:45:13-49:29
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:45:13-50:29
 action#android.intent.action.MAIN
 ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:46:17-69
 	android:name
@@ -147,29 +151,29 @@ ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:47:17-90
 	android:name
 		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:47:25-87
 category#android.intent.category.LAUNCHER
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:48:17-77
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:49:17-77
 	android:name
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:48:27-74
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:49:27-74
 activity#io.apps4u.fpmobile.ActivityEmployeeABM
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:51:9-59:20
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:52:9-60:20
 	android:parentActivityName
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:54:13-55
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:55:13-55
 	android:label
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:53:13-57
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:54:13-57
 	android:theme
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:55:13-44
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:56:13-44
 	android:name
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:52:13-48
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:53:13-48
 activity#io.apps4u.fpmobile.ActivityShowEmployees
-ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:60:9-68:20
+ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:61:9-69:20
 	android:parentActivityName
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:63:13-55
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:64:13-55
 	android:label
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:62:13-65
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:63:13-65
 	android:theme
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:64:13-44
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:65:13-44
 	android:name
-		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:61:13-50
+		ADDED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml:62:13-50
 uses-sdk
 INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from G:\W4UMovil\w4ubiomovil\app\src\main\AndroidManifest.xml

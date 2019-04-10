@@ -19,10 +19,10 @@ public class SignUpDB extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {    }
 
     public static abstract class TableDefinition implements BaseColumns {
-        public static final String NAME = "SIGNUPS";
+        public static final String NAME = "Signups";
         public static final String LEGAJO = "LEGAJO_ID";
         public static final String LATITUDE = "LATITUDE";
-        public static final String LONGITUDE = "LONGTIUD";
+        public static final String LONGITUDE = "LONGITUDE";
         public static final String DETAILS = "DETAILS";
         public static final String ADDRESS = "ADDRESS";
         public static final String TIMESTAMP = "TIMESTAMP";
@@ -45,7 +45,7 @@ public class SignUpDB extends SQLiteOpenHelper {
                     Boolean.toString(signUpData.is_registered_on_server()) // 6
             };
             // Ejecutamos la consulta contra la base de datos
-            db.rawQuery("INSERT INTO " + TableDefinition.NAME + "("
+            db.execSQL("INSERT INTO " + TableDefinition.NAME + "("
                     + TableDefinition.LEGAJO + ", "
                     + TableDefinition.LATITUDE + ", "
                     + TableDefinition.LONGITUDE + ", "

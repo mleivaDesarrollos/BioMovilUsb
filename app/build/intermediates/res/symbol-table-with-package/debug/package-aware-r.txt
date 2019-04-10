@@ -916,6 +916,7 @@ string button_validate_legajo
 string dialog_accept
 string dialog_cancel
 string dialog_delete
+string dialog_gps_needed
 string error_field_required
 string error_gps_not_available
 string error_incorrect_password

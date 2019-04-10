@@ -3,9 +3,9 @@ package io.apps4u.fpmobile;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -65,6 +65,9 @@ public class ActivityMain extends Activity {
     private static final String SOURCE_ENROLL = "Fichada bajo W4U Bio Movíl";
 
     private static final DateFormat FORMATDATE_W4U = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+    public Double LATITUDE;
+    public Double LONGITUDE;
 
     private static fpdevice fpdev = new fpdevice();
 
@@ -280,23 +283,9 @@ public class ActivityMain extends Activity {
 	    });
 		
 		btnOpen.callOnClick();*/
-        ValidateGPSPermission();
+        LocationChecker locationChecker = new LocationChecker(this);
     }
 
-    @SuppressLint("NewApi")
-    private void ValidateGPSPermission(){
-        if(!hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)){
-            requestPermissions( new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
-        }
-        if(!hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION)){
-            requestPermissions( new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},1);
-        }
-    }
-
-    @SuppressLint("NewApi")
-    private boolean hasPermission(String perm){
-        return (PackageManager.PERMISSION_GRANTED == checkSelfPermission(perm));
-    }
 
     private void initHandler() {
         handler = new Handler() {
@@ -403,13 +392,13 @@ public class ActivityMain extends Activity {
         // Establecemos el legajo del usuario fichado
         newSignIn.set_legajo(emp.get_legajo());
         // Levantamos las coordenadas
-        Coordinate currentLocation = GetCurrentCoordinates();
+        // Coordinate currentLocation = GetCurrentCoordinates();
         // Establecemos coordenadas
-        newSignIn.set_coordinates(currentLocation);
+        //newSignIn.set_coordinates(currentLocation);
         // Establecemos los comentarios
         newSignIn.set_details(SOURCE_ENROLL);
         // Establecemos las direcciones
-        newSignIn.set_address(GetAddress(currentLocation));
+        //newSignIn.set_address(GetAddress(currentLocation));
         // Configuramos el horario de la fichada
         newSignIn.set_timestamp(FORMATDATE_W4U.format((new Date())));
         // TODO AQUI IRIA LA VALIDACION ONLINE
@@ -419,7 +408,7 @@ public class ActivityMain extends Activity {
         suDB.Add(newSignIn);
     }
 
-    // Obtenemos las coordenadas del dispositivo
+   /* // Obtenemos las coordenadas del dispositivo
     private Coordinate GetCurrentCoordinates(){
         try{
             // Generamos un nuevo objeto
@@ -427,7 +416,11 @@ public class ActivityMain extends Activity {
             // Levantamos el LocationManager
             LocationManager lmCurrent = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
             // Levantamos la ubicacion
-            Location location = lmCurrent.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            // Location location = lmCurrent.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            Location location;
+
+
+
             // Validamos si la location es nula (si es nula es que no tiene acceso al satelite en este momento
             if(location != null ){
                 coordinate.set_latitude(location.getLatitude());
@@ -447,7 +440,7 @@ public class ActivityMain extends Activity {
         } catch(SecurityException e){
             throw e;
         }
-    }
+    }*/
 
     // Obtenemos direcciones basadas en coordenadas geográficas
     private String GetAddress(Coordinate fetchingCoordinates){
@@ -517,6 +510,7 @@ public class ActivityMain extends Activity {
         super.onStop();
     }
 
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -551,6 +545,20 @@ public class ActivityMain extends Activity {
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        if(requestCode == LocationChecker.PERMISSION_FINE_LOCATION_CODE || requestCode == LocationChecker.PERMISSION_COARSE_LOCATION_CODE){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_DENIED){
+                // Mostramos el mensaje de error y cerramos la aplicacion
+                GPSRequiredFragment requireGPS = new GPSRequiredFragment();
+                // Deshabilitamos la cancelación tocando al costado del dialogo
+                requireGPS.setCancelable(false);
+                // Mostramos el dialog
+                requireGPS.show(getFragmentManager(), "RequiredGPS");
+            }
+        }
     }
 
     //write txt file

@@ -26,6 +26,7 @@
     <string name="button_validate_legajo">Validar Legajo</string>
     <string name="button_save_new_enroll">Guardar Empleado</string>
     <!--Strings related to dialog boxes-->
+    <string name="dialog_gps_needed">Se necesitan permisos de acceso al GPS para operar.</string>
     <string name="dialog_delete">¿Estás seguro de eliminarlo?</string>
     <string name="dialog_accept">Aceptar</string>
     <string name="dialog_cancel">Cancelar</string>
