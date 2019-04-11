@@ -1,13 +1,18 @@
 package io.apps4u.fpdatabase;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class SignUpDB extends SQLiteOpenHelper {
+
     public SignUpDB(Context context){
         super(context, Database.NAME, null, Database.VERSION);
     }
@@ -56,5 +61,44 @@ public class SignUpDB extends SQLiteOpenHelper {
         } catch(Exception e){
             Log.e("AddSignup", e.getMessage());
         }
+    }
+
+    // Devuelve una lista de fichadas que aun no hayan sido registradas en el servidor
+    public ArrayList<SignUp> GetUnregisteredSignups(){
+        try{
+            // Preparamos el objeto a devolver
+            ArrayList<SignUp> lstSignUps = new ArrayList<>();
+            // Obtenemos una instancia de consulta de la base de datos
+            SQLiteDatabase db = getReadableDatabase();
+            // Preparamos un cursor para recorrer los elementos encontrados
+            Cursor c = db.rawQuery("SELECT * FROM " + TableDefinition.NAME + " WHERE " + TableDefinition.REGISTERED_ON_SERVER + " LIKE '%false%'", null);
+            // Iteramos sobre todos los elementos obtenidos
+            while(c.moveToNext()){
+                // Generamos una nueva variable signup
+                SignUp signToRegister = new SignUp();
+                // Procesamos los valores obtenidos y los almacenamos en la entidad a devolver
+                signToRegister.set_legajo(c.getString(c.getColumnIndex(TableDefinition.LEGAJO)));
+                // Separamos latitud y longitud
+                double dblLatitude = c.getDouble(c.getColumnIndex(TableDefinition.LATITUDE));
+                double dblLongitude = c.getDouble(c.getColumnIndex(TableDefinition.LONGITUDE));
+                // Establecemos las coordenadas nuevas
+                signToRegister.set_coordinates(new Coordinate(dblLatitude, dblLongitude));
+                // Agregamos los detalles de fichada
+                signToRegister.set_details(c.getString(c.getColumnIndex(TableDefinition.DETAILS)));
+                // Levantamos la timestamp
+                signToRegister.set_timestamp(c.getString(c.getColumnIndex(TableDefinition.TIMESTAMP)));
+                // Agregamos el registro al listado
+                lstSignUps.add(signToRegister);
+            }
+            // Cerramos la conexión del cursor
+            c.close();
+            // Devolvemos una excepción si no se encuentra el recurso
+            if(lstSignUps.size() == 0) throw new Resources.NotFoundException();
+            // Devolvemos el objeto procesado
+            return lstSignUps;
+        } catch (Exception e){
+            throw e;
+        }
+
     }
 }

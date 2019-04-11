@@ -619,10 +619,10 @@
     <string name="dialog_delete">¿Estás seguro de eliminarlo?</string>
     <string name="dialog_gps_needed">Se necesitan permisos de acceso al GPS para operar.</string>
     <string name="error_field_required">Este campo es requerido</string>
-    <string name="error_gps_not_available">No se pueden tomar las coordenadas del GPS. Revisá que se encuentre activo.</string>
     <string name="error_incorrect_password">La contraseña o el usuario es incorrecto</string>
     <string name="error_invalid_email">El email ingresado no es correcto</string>
     <string name="error_invalid_password">La contraseña es muy corta</string>
+    <string name="getting_coordinates">Recolectando coordenadas del GPS. Aguarde por favor...</string>
     <string name="hint_employee_fullname">Nombre y apellido</string>
     <string name="hint_employee_number">Legajo del empleado</string>
     <string name="login_title">Ingreso a W4u Bio Movil</string>
@@ -630,6 +630,7 @@
     <string name="menu_new_employee">Nuevo Empleado</string>
     <string name="menu_show_companys">Empresas</string>
     <string name="menu_show_employees">Empleados</string>
+    <string name="missing_fingerprint_devices">No es posible utilizar el dispositivo lector. Verifique la conexión al dispositivo.</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>

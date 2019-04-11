@@ -21,4 +21,11 @@ public class Coordinate {
         this._longitude = _longitude;
     }
 
+    public Coordinate() { }
+
+    public Coordinate(double paramLatitude, double paramLongitude) {
+        _latitude = paramLatitude;
+        _longitude = paramLongitude;
+    }
+
 }

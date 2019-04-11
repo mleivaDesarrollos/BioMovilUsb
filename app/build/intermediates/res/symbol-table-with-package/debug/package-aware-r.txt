@@ -918,10 +918,10 @@ string dialog_cancel
 string dialog_delete
 string dialog_gps_needed
 string error_field_required
-string error_gps_not_available
 string error_incorrect_password
 string error_invalid_email
 string error_invalid_password
+string getting_coordinates
 string hint_employee_fullname
 string hint_employee_number
 string login_title
@@ -929,6 +929,7 @@ string menu_new_company
 string menu_new_employee
 string menu_show_companys
 string menu_show_employees
+string missing_fingerprint_devices
 string permission_rationale
 string placeholder
 string pref_default_display_name

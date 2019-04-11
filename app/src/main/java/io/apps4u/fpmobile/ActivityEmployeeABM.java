@@ -98,7 +98,7 @@ public class ActivityEmployeeABM extends Activity {
         EditText txtLegajoUsuario = (EditText) findViewById(R.id.txtEmployeeNumber);
         // Levantamos el legajo de prueba:
         txtLegajoUsuario.setText("1073");
-        txtLegajoUsuario.setEnabled(false);
+        //txtLegajoUsuario.setEnabled(false);
     }
 
     public void btnGuardarOnClickHandler(View view) {

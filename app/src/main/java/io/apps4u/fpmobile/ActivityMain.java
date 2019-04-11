@@ -1,12 +1,11 @@
 package io.apps4u.fpmobile;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -27,6 +26,7 @@ import android.widget.TextView;
 import java.io.FileWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -100,6 +100,38 @@ public class ActivityMain extends Activity {
 
     String sDirectory = Environment.getExternalStorageDirectory() + "/FingerprintReader";
 
+    @SuppressLint("NewApi")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    // Controlamos el evento de inicio, funciona cuando se levanta la aplicación y cuando se reinicia la aplicación en pausa
+    @Override
+    protected void onStart(){
+        super.onStart();
+        locationChecker = new LocationChecker(this);
+        CheckIsReadyToFingerPrint();
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Detenemos el timer de recoleccion de huellas
+        TimerStop();
+        // Eliminamos las coordenadas
+        LATITUDE = NO_COORDINATES;
+        LONGITUDE = NO_COORDINATES;
+    }
+
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -154,108 +186,6 @@ public class ActivityMain extends Activity {
             }
         }
     }
-
-    @SuppressLint("NewApi")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-		/*FPMatch.getInstance().InitMatch(0, "https://www.hfteco.com");
-
-		btnOpen=(Button)findViewById(R.id.button1);
-		btnClose=(Button)findViewById(R.id.button2);
-		btnEnrol=(Button)findViewById(R.id.button10);
-		btnMatch=(Button)findViewById(R.id.button11);
-		btnMenuEnrol=(Button)findViewById(R.id.action_enrol);
-
-		tvStatus=(TextView)findViewById(R.id.textView1);
-		ivImage=(ImageView)findViewById(R.id.imageView1);
-		mEditText = (EditText) findViewById(R.id.editText1);
-		mEditText.setVisibility(View.GONE);
-		checkBoxImage=(CheckBox)findViewById(R.id.checkBox2);
-
-
-	//	initHandler();
-		
-		fpdev.SetInstance(this);
-		fpdev.SetUpImage(true); 
-						
-		btnOpen.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(isopening){
-					fpdev.CloseDevice();
-					isopening=false;
-				}
-				
-				switch(fpdev.OpenDevice()){
-				case 0:	
-					isopening=true;
-					tvStatus.setText("Open Device OK");
-					break;
-				case -1:
-					tvStatus.setText("Link Device Fail");
-					break;
-				case -2:
-					tvStatus.setText("Evaluation version expires");
-					break;
-				case -3:
-					tvStatus.setText("Open Device Fail");
-					break;
-				}
-			}
-		});
-		
-		*//*btnClose.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				//requestPermission();
-				if(isopening){
-					fpdev.CloseDevice();
-					tvStatus.setText("Close");
-					isopening=false;
-				}
-			}
-		});*//*
-         *//*
-
-
-		btnEnrol.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if(isopening){
-					workType=WORKTYPE_NULL;
-					TimerStop();
-					SystemClock.sleep(200);
-					TimerStart();
-					tvStatus.setText(R.string.txt_fp1);
-					workType=WORKTYPE_ENROL;
-					enrolCount=0;
-					totalCount=0;
-				}
-			}
-		});
- 
-		btnMatch.setOnClickListener(new View.OnClickListener() {
-	    	@Override
-	    	public void onClick(View v) {
-	    		if(isopening){
-	    			workType=WORKTYPE_NULL;
-	    			TimerStop();
-					SystemClock.sleep(200);
-	    			TimerStart();
-	    			tvStatus.setText(R.string.txt_fp1);
-	    			workType=WORKTYPE_MATCH;
-	    		}
-	    	}
-	    });
-		
-		btnOpen.callOnClick();*/
-        locationChecker = new LocationChecker(this);
-        CheckCoordinateStatus();
-    }
-
 
     private void initHandler() {
         handler = new Handler() {
@@ -334,8 +264,8 @@ public class ActivityMain extends Activity {
                                                 // agregar el post a la fichada
                                                 Toast.makeText(getApplicationContext(), R.string.txt_fichaok, Toast.LENGTH_SHORT).show();
                                             } catch(SecurityException e) {
-                                                // En caso de que exista error de permisos
-                                                Toast.makeText(getApplicationContext(), R.string.error_gps_not_available, Toast.LENGTH_SHORT).show();
+
+
                                             }
                                         } else {
                                             Toast.makeText(getApplicationContext(), R.string.txt_fichafail, Toast.LENGTH_SHORT).show();
@@ -355,67 +285,98 @@ public class ActivityMain extends Activity {
         };
     }
 
-    public void CheckCoordinateStatus(){
+    public void CheckIsReadyToFingerPrint(){
         // Levantamos el boton
         Button btnFichar = findViewById(R.id.btnFichar);
-        // Validamos si las coordenadas fueron cargadas
-        if(LONGITUDE != NO_COORDINATES && LATITUDE != NO_COORDINATES){
-            // Configuramos el nuevo evento de listener
-            btnFichar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FicharWithCoordinatesAcquired();
-                }
-            });
-            // Cambiamos el color de fondo del boton
-            btnFichar.setBackgroundColor(getResources().getColor(R.color.azul));
-            // Si las coordenadas no estan cargadas
+        if(isFingerPrintReady()){
+            // Validamos si las coordenadas fueron cargadas
+            if(LONGITUDE != NO_COORDINATES && LATITUDE != NO_COORDINATES){
+                // Configuramos el nuevo evento de listener
+                btnFichar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FicharWithCoordinatesAcquired();
+                    }
+                });
+                // Cambiamos el color de fondo del boton
+                btnFichar.setBackgroundColor(getResources().getColor(R.color.azul));
+                // Si las coordenadas no estan cargadas
+            } else {
+                // Seteamos el evento de click cuando las coordenadas no estan cargadas
+                btnFichar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MissingCordinatesMessage();
+                    }
+                });
+                // Cambiamos el color de fondo del boton
+                btnFichar.setBackgroundColor(getResources().getColor(R.color.gray_background));
+            }
         } else {
             // Seteamos el evento de click cuando las coordenadas no estan cargadas
             btnFichar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(), R.string.error_gps_not_available, Toast.LENGTH_LONG).show();
+                    MissingFingerPrintDeviceMesage();
                 }
             });
             // Cambiamos el color de fondo del boton
             btnFichar.setBackgroundColor(getResources().getColor(R.color.gray_background));
-
         }
     }
 
-    public void FicharWithoutCoordinates(){
-
+    public void MissingCordinatesMessage(){
+        Toast.makeText(getApplicationContext(), R.string.getting_coordinates, Toast.LENGTH_LONG).show();
     }
 
+    public void MissingFingerPrintDeviceMesage(){
+        Toast.makeText(getApplicationContext(), R.string.missing_fingerprint_devices, Toast.LENGTH_LONG).show();
+    }
 
     public void FicharWithCoordinatesAcquired(){
+        // Iniciamos la toma de huellas
+        InitTakeFingerActivity();
+    }
+
+    private boolean isFingerPrintReady(){
         fpdev.SetInstance(this);
         fpdev.SetUpImage(true);
         if (isopening) {
             fpdev.CloseDevice();
             isopening = false;
         }
-        initHandler();
         switch (fpdev.OpenDevice()) {
             case 0:
-                isopening = true;
-                Toast.makeText(getApplicationContext(), "Coloque el dedo en el lector", Toast.LENGTH_SHORT).show();
-                workType=WORKTYPE_NULL;
-                TimerStop();
-                SystemClock.sleep(200);
-                TimerStart();
-                workType=WORKTYPE_MATCH;
-                break;
+                return true;
             case -1:
-                Toast.makeText(getApplicationContext(), "El lector no se encuentra listo", Toast.LENGTH_SHORT).show();
-                break;
+                return false;
             case -2:
-                Toast.makeText(getApplicationContext(), "Contacte con el administrador", Toast.LENGTH_SHORT).show();
-                break;
+                Log.e("FPDevice", "No esta listo, contiene errores a verificar.");
+                return false;
             case -3:
-                Toast.makeText(getApplicationContext(), "Error al abrir dispositivo", Toast.LENGTH_SHORT).show();
-                break;
+                Log.e("FPDevice", "No esta listo, contiene errores a verificar.");
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    private void InitTakeFingerActivity(){
+        if(isFingerPrintReady()){
+            // Tarea que escucha lectura de huellas en dispositivo
+            initHandler();
+            // Informamos  que se esta haciendo la tarea de tomar huellas
+            isopening = true;
+            // Vaciamos el tipo de trabajo actual
+            workType=WORKTYPE_NULL;
+            // Detenemos el tiempo
+            TimerStop();
+            // Esperamos unos 200 ms
+            SystemClock.sleep(200);
+            // Iniciamos la toma de huella
+            TimerStart();
+            // Establecemos como actividad el matcheo de huellas
+            workType=WORKTYPE_MATCH;
         }
     }
 
@@ -426,13 +387,15 @@ public class ActivityMain extends Activity {
         // Establecemos el legajo del usuario fichado
         newSignIn.set_legajo(emp.get_legajo());
         // Levantamos las coordenadas
-        // Coordinate currentLocation = GetCurrentCoordinates();
+        Coordinate currentCoordinates = new Coordinate();
+        currentCoordinates.set_longitude(LONGITUDE);
+        currentCoordinates.set_latitude(LATITUDE);
         // Establecemos coordenadas
-        //newSignIn.set_coordinates(currentLocation);
+        newSignIn.set_coordinates(currentCoordinates);
         // Establecemos los comentarios
         newSignIn.set_details(SOURCE_ENROLL);
         // Establecemos las direcciones
-        //newSignIn.set_address(GetAddress(currentLocation));
+        newSignIn.set_address(GetAddress(currentCoordinates));
         // Configuramos el horario de la fichada
         newSignIn.set_timestamp(FORMATDATE_W4U.format((new Date())));
         // TODO AQUI IRIA LA VALIDACION ONLINE
@@ -442,39 +405,32 @@ public class ActivityMain extends Activity {
         suDB.Add(newSignIn);
     }
 
-   /* // Obtenemos las coordenadas del dispositivo
-    private Coordinate GetCurrentCoordinates(){
+    // Método que carga los enrolamientos en el servidor de la API
+    private void checkAndRegisterEnrollsOnServer(){
         try{
-            // Generamos un nuevo objeto
-            Coordinate coordinate = new Coordinate();
-            // Levantamos el LocationManager
-            LocationManager lmCurrent = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-            // Levantamos la ubicacion
-            // Location location = lmCurrent.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            Location location;
+            // Validamos si hay conexión a la red
 
-
-
-            // Validamos si la location es nula (si es nula es que no tiene acceso al satelite en este momento
-            if(location != null ){
-                coordinate.set_latitude(location.getLatitude());
-                coordinate.set_longitude(location.getLongitude());
-            } else {
-                // Seleccionamos el proveedor
-                String provider = lmCurrent.getBestProvider(new Criteria(), true);
-                // Levantamos la ubicación
-                location = lmCurrent.getLastKnownLocation(provider);
-                if(location != null){
-                    coordinate.set_latitude(location.getLatitude());
-                    coordinate.set_longitude(location.getLongitude());
-                }
-            }
-            // Devolvemos las coordenadas
-            return coordinate;
-        } catch(SecurityException e){
-            throw e;
+        } catch(Resources.NotFoundException nfe){ }
+        catch(Exception e){
+            Log.e("GettingSignUps", e.getMessage());
         }
-    }*/
+    }
+
+    // Chequeamos si hay conectividad en la red
+    private boolean isNetworkReady(){
+        try{
+            // Llevantamos un administración de connexión
+            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            // Validamos si hay conexión a la red
+            if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED){
+                return true;
+            }
+            return false;
+        } catch(Exception e){
+            return false;
+        }
+    }
 
     // Obtenemos direcciones basadas en coordenadas geográficas
     private String GetAddress(Coordinate fetchingCoordinates){
@@ -529,21 +485,6 @@ public class ActivityMain extends Activity {
             mTimerTask = null;
         }
     }
-
-    @SuppressLint("NewApi")
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //btnOpen.callOnClick();
-    }
-
-    @SuppressLint("NewApi")
-    @Override
-    protected void onStop() {
-        //btnClose.callOnClick();
-        super.onStop();
-    }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

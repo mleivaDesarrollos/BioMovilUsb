@@ -9,7 +9,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 public class LocationChecker {
@@ -124,7 +123,7 @@ public class LocationChecker {
         main.LATITUDE = paramLatitude;
         main.LONGITUDE = paramLongitude;
         // Indicamos a la actividad principal que vuelva a chequear las coordenadas
-        main.CheckCoordinateStatus();
+        main.CheckIsReadyToFingerPrint();
         // Debugueamos el mensaje
         //if(Session.DEBUG) Toast.makeText(callerActivity.getApplicationContext(), "Latitude: " + main.LATITUDE +". Longitud: " + main.LONGITUDE , Toast.LENGTH_LONG).show();
     }

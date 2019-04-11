@@ -37,7 +37,8 @@
     <string name="menu_new_company">Nueva Empresa</string>
     <!--String for fill space on view design-->
     <string name="placeholder">placeholder</string>.
-    <string name="error_gps_not_available">No se pueden tomar las coordenadas del GPS. Revisá que se encuentre activo.</string>
+    <string name="getting_coordinates">Recolectando coordenadas del GPS. Aguarde por favor...</string>
+    <string name="missing_fingerprint_devices">No es posible utilizar el dispositivo lector. Verifique la conexión al dispositivo.</string>
 
     <!-- Strings related to Settings -->
 
