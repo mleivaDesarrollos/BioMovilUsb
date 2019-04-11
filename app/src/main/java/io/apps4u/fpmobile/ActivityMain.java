@@ -65,9 +65,11 @@ public class ActivityMain extends Activity {
     private static final String SOURCE_ENROLL = "Fichada bajo W4U Bio Movíl";
 
     private static final DateFormat FORMATDATE_W4U = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    public LocationChecker locationChecker;
 
-    public Double LATITUDE;
-    public Double LONGITUDE;
+    private static final Double NO_COORDINATES = 0D;
+    public Double LATITUDE = NO_COORDINATES;
+    public Double LONGITUDE = NO_COORDINATES;
 
     private static fpdevice fpdev = new fpdevice();
 
@@ -158,40 +160,7 @@ public class ActivityMain extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button btnFichar = (Button) findViewById(R.id.btnFichar);
-        fpdev.SetInstance(this);
-        fpdev.SetUpImage(true);
 
-        btnFichar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isopening) {
-                    fpdev.CloseDevice();
-                    isopening = false;
-                }
-                initHandler();
-                switch (fpdev.OpenDevice()) {
-                    case 0:
-                        isopening = true;
-                        Toast.makeText(getApplicationContext(), "Coloque el dedo en el lector", Toast.LENGTH_SHORT).show();
-                        workType=WORKTYPE_NULL;
-                        TimerStop();
-                        SystemClock.sleep(200);
-                        TimerStart();
-                        workType=WORKTYPE_MATCH;
-                        break;
-                    case -1:
-                        Toast.makeText(getApplicationContext(), "El lector no se encuentra listo", Toast.LENGTH_SHORT).show();
-                        break;
-                    case -2:
-                        Toast.makeText(getApplicationContext(), "Contacte con el administrador", Toast.LENGTH_SHORT).show();
-                        break;
-                    case -3:
-                        Toast.makeText(getApplicationContext(), "Error al abrir dispositivo", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            }
-        });
 		/*FPMatch.getInstance().InitMatch(0, "https://www.hfteco.com");
 
 		btnOpen=(Button)findViewById(R.id.button1);
@@ -283,7 +252,8 @@ public class ActivityMain extends Activity {
 	    });
 		
 		btnOpen.callOnClick();*/
-        LocationChecker locationChecker = new LocationChecker(this);
+        locationChecker = new LocationChecker(this);
+        CheckCoordinateStatus();
     }
 
 
@@ -383,6 +353,70 @@ public class ActivityMain extends Activity {
                 super.handleMessage(msg);
             }
         };
+    }
+
+    public void CheckCoordinateStatus(){
+        // Levantamos el boton
+        Button btnFichar = findViewById(R.id.btnFichar);
+        // Validamos si las coordenadas fueron cargadas
+        if(LONGITUDE != NO_COORDINATES && LATITUDE != NO_COORDINATES){
+            // Configuramos el nuevo evento de listener
+            btnFichar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FicharWithCoordinatesAcquired();
+                }
+            });
+            // Cambiamos el color de fondo del boton
+            btnFichar.setBackgroundColor(getResources().getColor(R.color.azul));
+            // Si las coordenadas no estan cargadas
+        } else {
+            // Seteamos el evento de click cuando las coordenadas no estan cargadas
+            btnFichar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(), R.string.error_gps_not_available, Toast.LENGTH_LONG).show();
+                }
+            });
+            // Cambiamos el color de fondo del boton
+            btnFichar.setBackgroundColor(getResources().getColor(R.color.gray_background));
+
+        }
+    }
+
+    public void FicharWithoutCoordinates(){
+
+    }
+
+
+    public void FicharWithCoordinatesAcquired(){
+        fpdev.SetInstance(this);
+        fpdev.SetUpImage(true);
+        if (isopening) {
+            fpdev.CloseDevice();
+            isopening = false;
+        }
+        initHandler();
+        switch (fpdev.OpenDevice()) {
+            case 0:
+                isopening = true;
+                Toast.makeText(getApplicationContext(), "Coloque el dedo en el lector", Toast.LENGTH_SHORT).show();
+                workType=WORKTYPE_NULL;
+                TimerStop();
+                SystemClock.sleep(200);
+                TimerStart();
+                workType=WORKTYPE_MATCH;
+                break;
+            case -1:
+                Toast.makeText(getApplicationContext(), "El lector no se encuentra listo", Toast.LENGTH_SHORT).show();
+                break;
+            case -2:
+                Toast.makeText(getApplicationContext(), "Contacte con el administrador", Toast.LENGTH_SHORT).show();
+                break;
+            case -3:
+                Toast.makeText(getApplicationContext(), "Error al abrir dispositivo", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     // Registramos los datos del empleado en la base de datos
@@ -557,6 +591,8 @@ public class ActivityMain extends Activity {
                 requireGPS.setCancelable(false);
                 // Mostramos el dialog
                 requireGPS.show(getFragmentManager(), "RequiredGPS");
+            } else if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                locationChecker.StartRequestLocation();
             }
         }
     }

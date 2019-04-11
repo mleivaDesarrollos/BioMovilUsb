@@ -45,6 +45,13 @@ public class LocationChecker {
         }
     }
 
+    public void StartRequestLocation(){
+        // Generamos una nueva instancia del administrador de ubicaciones
+        getNewLocationManager();
+        // Solicitamos las coordenadas
+        requestCoordinates();
+    }
+
 
     private void getNewLocationManager(){
         // Validamos si ya hay una instancia de location manager generada
@@ -89,8 +96,6 @@ public class LocationChecker {
         @Override
         public void onLocationChanged(Location location) {
             reportReceivedCoordinates(location.getLatitude(), location.getLongitude());
-            // Debugueamos el mensaje
-            //if(Session.DEBUG) Toast.makeText(callerActivity.getApplicationContext(), "Latitude: " + location.getLongitude() +". Longitud: " + location.getLongitude(), Toast.LENGTH_LONG).show();
             // Detenemos el proceso de busqueda de nueva direccion
             stopAndDestroyLocationManager();
         }
@@ -118,6 +123,10 @@ public class LocationChecker {
         // Establecemos los parametros de longitud y latitude
         main.LATITUDE = paramLatitude;
         main.LONGITUDE = paramLongitude;
+        // Indicamos a la actividad principal que vuelva a chequear las coordenadas
+        main.CheckCoordinateStatus();
+        // Debugueamos el mensaje
+        //if(Session.DEBUG) Toast.makeText(callerActivity.getApplicationContext(), "Latitude: " + main.LATITUDE +". Longitud: " + main.LONGITUDE , Toast.LENGTH_LONG).show();
     }
 
 

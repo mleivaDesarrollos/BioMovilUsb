@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "G:\\W4UMovil\\w4ubiomovil\\app\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-v14\\values-v14.xml",
+            "outputFile": "D:\\Programacion\\w4ubiomovil\\app\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-v14\\values-v14.xml",
             "map": [
                 {
-                    "source": "G:\\W4UMovil\\w4ubiomovil\\app\\src\\main\\res\\values-v14\\styles.xml",
+                    "source": "D:\\Programacion\\w4ubiomovil\\app\\src\\main\\res\\values-v14\\styles.xml",
                     "from": {
                         "startLines": "7,12",
                         "startColumns": "4,4",

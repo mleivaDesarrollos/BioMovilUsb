@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "G:\\W4UMovil\\w4ubiomovil\\app\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-sw720dp-land-v13\\values-sw720dp-land-v13.xml",
+            "outputFile": "D:\\Programacion\\w4ubiomovil\\app\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-sw720dp-land-v13\\values-sw720dp-land-v13.xml",
             "map": [
                 {
-                    "source": "G:\\W4UMovil\\w4ubiomovil\\app\\src\\main\\res\\values-sw720dp-land\\dimens.xml",
+                    "source": "D:\\Programacion\\w4ubiomovil\\app\\src\\main\\res\\values-sw720dp-land\\dimens.xml",
                     "from": {
                         "startLines": "6",
                         "startColumns": "4",
