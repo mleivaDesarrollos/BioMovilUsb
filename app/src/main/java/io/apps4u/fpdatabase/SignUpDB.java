@@ -1,5 +1,6 @@
 package io.apps4u.fpdatabase;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -11,10 +12,15 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import io.apps4u.fpmobile.Session;
+
 public class SignUpDB extends SQLiteOpenHelper {
+
+    private Context _context;
 
     public SignUpDB(Context context){
         super(context, Database.NAME, null, Database.VERSION);
+        _context = context;
     }
 
     @Override
@@ -41,7 +47,7 @@ public class SignUpDB extends SQLiteOpenHelper {
             SQLiteDatabase db = getWritableDatabase();
             // Levantamos los parametros
             String params[] = new String[] {
-                    signUpData.get_legajo(), // 0
+                    signUpData.get_empleado().get_legajo(), // 0
                     Double.toString(signUpData.get_coordinates().get_latitude()), // 1
                     Double.toString(signUpData.get_coordinates().get_longitude()), // 2
                     signUpData.get_details(), // 3
@@ -63,26 +69,50 @@ public class SignUpDB extends SQLiteOpenHelper {
         }
     }
 
+    // Registramos una fichada como ya enviada a los servidores en la base local
+    public void SetRegistered(SignUp paramSignUp) throws Exception{
+        // Validamos si el elemento viene con los valores requeridos
+        if(paramSignUp == null || paramSignUp.get_id() < 0) throw new Exception("Error al registrar fichada exitosa en base local. La fichada es nula o el id es incorrecto.");
+        // Levantamos una instancia de escritura en base de datos
+        SQLiteDatabase db = getWritableDatabase();
+        // Ejecutamos la actualizacion sobre la base de datos
+        db.execSQL("UPDATE " + TableDefinition.NAME
+                + " SET " + TableDefinition.REGISTERED_ON_SERVER
+                + "='true' WHERE " + TableDefinition._ID + "=?", new String[]{Integer.toString(paramSignUp.get_id())});
+    }
+
     // Devuelve una lista de fichadas que aun no hayan sido registradas en el servidor
-    public ArrayList<SignUp> GetUnregisteredSignups(){
+    public ArrayList<SignUp> GetUnregisteredSignups(Manager paramManager){
         try{
             // Preparamos el objeto a devolver
             ArrayList<SignUp> lstSignUps = new ArrayList<>();
             // Obtenemos una instancia de consulta de la base de datos
             SQLiteDatabase db = getReadableDatabase();
             // Preparamos un cursor para recorrer los elementos encontrados
-            Cursor c = db.rawQuery("SELECT * FROM " + TableDefinition.NAME + " WHERE " + TableDefinition.REGISTERED_ON_SERVER + " LIKE '%false%'", null);
+            Cursor c = db.rawQuery("SELECT * FROM " + TableDefinition.NAME + " as sgps " +
+                    "INNER JOIN " + EmpleadoDB.TableDefinition.NAME + " as emps " +
+                    "ON sgps." + TableDefinition.LEGAJO + " = emps." + EmpleadoDB.TableDefinition.LEGAJO +
+                    " WHERE " + TableDefinition.REGISTERED_ON_SERVER + " LIKE '%false%' AND " +
+                    " emps." + EmpleadoDB.TableDefinition.MANAGER_ID + "=" + paramManager.get_legajoId(), null);
             // Iteramos sobre todos los elementos obtenidos
             while(c.moveToNext()){
                 // Generamos una nueva variable signup
                 SignUp signToRegister = new SignUp();
+                // Levantamos el ID unico de la fichada
+                signToRegister.set_id(c.getInt(c.getColumnIndex(TableDefinition._ID)));
                 // Procesamos los valores obtenidos y los almacenamos en la entidad a devolver
-                signToRegister.set_legajo(c.getString(c.getColumnIndex(TableDefinition.LEGAJO)));
+                Empleado employee = new Empleado();
+                employee.set_legajo(c.getString(c.getColumnIndex(TableDefinition.LEGAJO)));
+                employee.set_managerid(paramManager.get_legajoId());
+                // Guardamos el empleado en la entidad firma
+                signToRegister.set_empleado(employee);
                 // Separamos latitud y longitud
                 double dblLatitude = c.getDouble(c.getColumnIndex(TableDefinition.LATITUDE));
                 double dblLongitude = c.getDouble(c.getColumnIndex(TableDefinition.LONGITUDE));
                 // Establecemos las coordenadas nuevas
                 signToRegister.set_coordinates(new Coordinate(dblLatitude, dblLongitude));
+                // Levantamos la direccion de fichada
+                signToRegister.set_address(c.getString(c.getColumnIndex(TableDefinition.ADDRESS)));
                 // Agregamos los detalles de fichada
                 signToRegister.set_details(c.getString(c.getColumnIndex(TableDefinition.DETAILS)));
                 // Levantamos la timestamp

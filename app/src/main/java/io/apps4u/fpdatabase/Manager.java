@@ -76,7 +76,7 @@ public class Manager {
         // Preparamos el ContentValue para devolver en el proceso
         ContentValues content = new ContentValues();
         // Almacenamos los valores
-        content.put(ManagerDB.TableDefinition.LEGAJO_ID, get_legajoId());
+        content.put(ManagerDB.TableDefinition.LEGAJO, get_legajoId());
         content.put(ManagerDB.TableDefinition.FIRSTNAME, get_firstname());
         content.put(ManagerDB.TableDefinition.LASTNAME, get_lastname());
         content.put(ManagerDB.TableDefinition.COMPANY_ID, get_companyId());

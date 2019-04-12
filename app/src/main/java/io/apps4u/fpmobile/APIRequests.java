@@ -1,27 +1,46 @@
 package io.apps4u.fpmobile;
 
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.apps4u.fpdatabase.Empleado;
 import io.apps4u.fpdatabase.Manager;
 import io.apps4u.fpdatabase.SignUp;
+import io.apps4u.fpdatabase.SignUpDB;
 
 public class APIRequests {
-    private static final String LOGIN_EMAIL = "email";
-    private static final String LOGIN_PASSWORD = "password";
-    private static final String LEGAJO = "legajo";
+    // Request HEADERS
     private static final String EMPRESA = "empresaid";
     private static final String AUTHORIZATION = "Authorization";
+    // Login JSON Body
+    private static final String LOGIN_EMAIL = "email";
+    private static final String LOGIN_PASSWORD = "password";
+    // Legajo JSON Item
+    private static final String LEGAJO = "legajo";
+    // Enroll JSON Body
+    private static final String LATITUDE = "lat";
+    private static final String LONGITUDE = "long";
+    private static final String DETAILS = "motivo";
+    private static final String ADDRESS = "direccion";
+    private static final String TIMESTAMP = "fecha";
 
     public static Manager Login(String paramUsername, String paramPassword){
         // Preparamos el objeto de retorno
@@ -89,7 +108,56 @@ public class APIRequests {
         return loggedManager;
     }
 
-    public static void Enroll(SignUp signUpData){
+    // Mètodo que se encarga de interactuar con la API de Work 4U
+    public static void Enroll(ArrayList<SignUp> paramSignups, Manager loggedManager, Context context) throws Exception {
+        try{
+            // Validamos que haya contenido en la lista
+            if(paramSignups == null || paramSignups.size() <= 0) throw new Exception("Es necesario pasar al menos un enrolamiento para enviar la informacion la base de datos.");
+            // Levantamos una instancia de ayudante de base de datos
+            SignUpDB sDB = new SignUpDB(context);
+            // Iteramos sobre todos los elementos contenidos en la lista
+            for(SignUp sign: paramSignups){
+                // Cargamos la dirección URL que se utilizará para enviar
+                URL url = new URL("https://find4u.apps4u.io/api/v4/fichar");
+                // Preparamos la conexión
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                // Disponemos del método de conexión
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                // Configuramos las cabeceras
+                conn.setRequestProperty(EMPRESA, loggedManager.get_companyId());
+                conn.setRequestProperty(AUTHORIZATION, loggedManager.get_authorization());
+                // Generamos el objeto JSON para Procesarlo en retorno
+                List<AbstractMap.SimpleEntry> queryStringParams = new ArrayList<>();
+                // Cargamos los parametros por query string
+                queryStringParams.add(new AbstractMap.SimpleEntry(LEGAJO, sign.get_empleado().get_legajo()));
+                queryStringParams.add(new AbstractMap.SimpleEntry(LATITUDE, sign.get_coordinates().get_latitude()));
+                queryStringParams.add(new AbstractMap.SimpleEntry(LONGITUDE, sign.get_coordinates().get_longitude()));
+                queryStringParams.add(new AbstractMap.SimpleEntry(DETAILS, sign.get_details()));
+                queryStringParams.add(new AbstractMap.SimpleEntry(ADDRESS, sign.get_address()));
+                queryStringParams.add(new AbstractMap.SimpleEntry(TIMESTAMP, sign.get_timestamp()));
+                // Generamos un objeto DataOutputStream
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                // Escribimos los bytes de los datos en JSON
+                writer.write(getQuery(queryStringParams));
+                writer.flush();
+                writer.close();
+                os.close();
+                conn.connect();
+                int status = conn.getResponseCode();
+                switch(status) {
+                    case 200:
+                    case 201:
+                        // Una vez registrado y logrado el cambio de manera correcta, hay que actualizar la base local para que no vuelva a enviarlo en posteriores solicitudes
+                        sDB.SetRegistered(sign);
+                        break;
+                }
+            }
+        } catch(Exception e){
+            throw e;
+        }
 
     }
 
@@ -157,5 +225,23 @@ public class APIRequests {
         }
         // Devolvemos el valor procesado
         return empleadoOnW4u;
+    }
+
+    // Code Snippet para convertir parametros a queryString y asi poder enviar solicitudes con este formato
+    private static String getQuery(List<AbstractMap.SimpleEntry> params) throws UnsupportedEncodingException{
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for(AbstractMap.SimpleEntry parameter: params){
+            // El primer caracter en queryString va sin ampersand, el resto si.
+            if(!first){
+                sb.append("&");
+            } else {
+                first = false;
+            }
+            sb.append(URLEncoder.encode(parameter.getKey().toString(), "UTF-8"));
+            sb.append("=");
+            sb.append(URLEncoder.encode(parameter.getValue().toString(), "UTF-8"));
+        }
+        return sb.toString();
     }
 }

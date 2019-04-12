@@ -23,7 +23,7 @@ public class ManagerDB extends SQLiteOpenHelper {
 
     public static abstract class TableDefinition implements BaseColumns {
         public static final String NAME = "Managers";
-        public static final String LEGAJO_ID = "LEGAJO_ID";
+        public static final String LEGAJO = "LEGAJO_ID";
         public static final String FIRSTNAME = "FIRSTNAME";
         public static final String LASTNAME = "LASTNAME";
         public static final String COMPANY_ID = "COMPANY_ID";
@@ -44,7 +44,7 @@ public class ManagerDB extends SQLiteOpenHelper {
                 // Generamos un nuevo Manager
                 Manager newManager = new Manager();
                 // Agregamos los parametros
-                newManager.set_legajoId(c.getString(c.getColumnIndex(TableDefinition.LEGAJO_ID)));
+                newManager.set_legajoId(c.getString(c.getColumnIndex(TableDefinition.LEGAJO)));
                 newManager.set_firstname(c.getString(c.getColumnIndex(TableDefinition.FIRSTNAME)));
                 newManager.set_companyId(c.getString(c.getColumnIndex(TableDefinition.COMPANY_ID)));
                 newManager.set_companyName(c.getString(c.getColumnIndex(TableDefinition.COMPANY_NAME)));
@@ -77,7 +77,7 @@ public class ManagerDB extends SQLiteOpenHelper {
             // Generamos una nueva instancia de Manager
             manager = new Manager();
             // Cargamos los datos del administrador
-            manager.set_legajoId(c.getString(c.getColumnIndex(TableDefinition.LEGAJO_ID)));
+            manager.set_legajoId(c.getString(c.getColumnIndex(TableDefinition.LEGAJO)));
             manager.set_firstname(c.getString(c.getColumnIndex(TableDefinition.FIRSTNAME)));
             manager.set_lastname(c.getString(c.getColumnIndex(TableDefinition.LASTNAME)));
             manager.set_companyId(c.getString(c.getColumnIndex(TableDefinition.COMPANY_ID)));
@@ -142,7 +142,7 @@ public class ManagerDB extends SQLiteOpenHelper {
             };
             // Ejecutamos el Query
             db.execSQL("INSERT INTO " + TableDefinition.NAME + " " +
-                    "(" + TableDefinition.LEGAJO_ID + ","
+                    "(" + TableDefinition.LEGAJO + ","
                     + TableDefinition.FIRSTNAME + ", "
                     + TableDefinition.LASTNAME + ", "
                     + TableDefinition.COMPANY_ID + ", "

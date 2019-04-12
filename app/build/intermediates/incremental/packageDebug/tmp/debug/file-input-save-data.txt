@@ -1,19 +1,19 @@
 #Internal package file, do not edit.
-#Thu Apr 11 14:14:34 ART 2019
-1.base=G\:\\Proyectos\\W4UMovil\\w4ubiomovil\\app\\build\\intermediates\\transforms\\mergeJniLibs\\debug\\0
+#Thu Apr 11 23:55:29 ART 2019
+1.base=D\:\\Programacion\\w4ubiomovil\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 2.path=lib/armeabi/libfgtitalg.so
 0.baseType=DIRECTORY
 3.baseType=DIRECTORY
-2.base=G\:\\Proyectos\\W4UMovil\\w4ubiomovil\\app\\build\\intermediates\\transforms\\mergeJniLibs\\debug\\0
-3.set=DEX
+2.base=D\:\\Programacion\\w4ubiomovil\\app\\build\\intermediates\\transforms\\mergeJniLibs\\debug\\0
+3.set=NATIVE_RESOURCE
 2.set=NATIVE_RESOURCE
 1.baseType=DIRECTORY
-3.path=classes.dex
+3.path=lib/armeabi/libfpcore.so
 count=4
-1.set=NATIVE_RESOURCE
-0.path=lib/armeabi/libfpcore.so
-3.base=G\:\\Proyectos\\W4UMovil\\w4ubiomovil\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+1.set=DEX
+0.path=lib/armeabi/libfgtitinit.so
+3.base=D\:\\Programacion\\w4ubiomovil\\app\\build\\intermediates\\transforms\\mergeJniLibs\\debug\\0
 0.set=NATIVE_RESOURCE
-0.base=G\:\\Proyectos\\W4UMovil\\w4ubiomovil\\app\\build\\intermediates\\transforms\\mergeJniLibs\\debug\\0
+0.base=D\:\\Programacion\\w4ubiomovil\\app\\build\\intermediates\\transforms\\mergeJniLibs\\debug\\0
 2.baseType=DIRECTORY
-1.path=lib/armeabi/libfgtitinit.so
+1.path=classes.dex

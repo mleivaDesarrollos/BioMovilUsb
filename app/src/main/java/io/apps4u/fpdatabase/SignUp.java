@@ -1,7 +1,9 @@
 package io.apps4u.fpdatabase;
 
 public class SignUp {
-    private String _legajo;
+    private int _id;
+
+    private Empleado _empleado;
 
     private Coordinate _coordinates;
 
@@ -13,12 +15,20 @@ public class SignUp {
 
     private boolean _registered_on_server;
 
-    public String get_legajo() {
-        return _legajo;
+    public int get_id() {
+        return _id;
     }
 
-    public void set_legajo(String _legajo) {
-        this._legajo = _legajo;
+    public void set_id(int _id) {
+        this._id = _id;
+    }
+
+    public Empleado get_empleado() {
+        return _empleado;
+    }
+
+    public void set_empleado(Empleado _empleado) {
+        this._empleado = _empleado;
     }
 
     public Coordinate get_coordinates() {

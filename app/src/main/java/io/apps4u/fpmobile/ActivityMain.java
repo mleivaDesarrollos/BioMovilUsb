@@ -40,6 +40,7 @@ import io.apps4u.fpdatabase.Empleado;
 import io.apps4u.fpdatabase.EmpleadoDB;
 import com.fgtit.fpcore.FPMatch;
 import fgtit.fpengine.fpdevice;
+import io.apps4u.fpdatabase.Manager;
 import io.apps4u.fpdatabase.SignUp;
 import io.apps4u.fpdatabase.SignUpDB;
 
@@ -112,7 +113,10 @@ public class ActivityMain extends Activity {
     protected void onStart(){
         super.onStart();
         locationChecker = new LocationChecker(this);
+        // Validamos si el dispositivo esta listo para la fichada
         CheckIsReadyToFingerPrint();
+        // Chequeamos las fichadas que aun no han sido enviadas a servidor
+        checkAndRegisterEnrollsOnServer();
     }
 
     @SuppressLint("NewApi")
@@ -343,6 +347,7 @@ public class ActivityMain extends Activity {
         fpdev.SetUpImage(true);
         if (isopening) {
             fpdev.CloseDevice();
+            TimerStop();
             isopening = false;
         }
         switch (fpdev.OpenDevice()) {
@@ -363,6 +368,8 @@ public class ActivityMain extends Activity {
 
     private void InitTakeFingerActivity(){
         if(isFingerPrintReady()){
+            // Pedimos al usuario que marque huella
+            Toast.makeText(getApplicationContext(), R.string.txt_fp1, Toast.LENGTH_LONG).show();
             // Tarea que escucha lectura de huellas en dispositivo
             initHandler();
             // Informamos  que se esta haciendo la tarea de tomar huellas
@@ -385,7 +392,7 @@ public class ActivityMain extends Activity {
         // Generamos un nuevo objeto signup
         SignUp newSignIn = new SignUp();
         // Establecemos el legajo del usuario fichado
-        newSignIn.set_legajo(emp.get_legajo());
+        newSignIn.set_empleado(emp);
         // Levantamos las coordenadas
         Coordinate currentCoordinates = new Coordinate();
         currentCoordinates.set_longitude(LONGITUDE);
@@ -407,13 +414,33 @@ public class ActivityMain extends Activity {
 
     // Método que carga los enrolamientos en el servidor de la API
     private void checkAndRegisterEnrollsOnServer(){
-        try{
-            // Validamos si hay conexión a la red
+        // Durante el proceso se realiza una peticion por JSON, por defecto android da una excepcion si se pide por network un recurso en el thread principal
+        Thread checkSignupsThread = new Thread(new Runnable(){
+            @Override
+            public void run(){
+                try{
+                    // Validamos si hay conexión a la red
+                    if(isNetworkReady()){
+                        // Levantamos las fichadas que no esten registradas en el servidor
+                        SignUpDB sDb = new SignUpDB(getApplicationContext());
+                        // Levantamos el administrador de la cuenta
+                        Session sessionInfo = (Session) getApplication();
+                        // Elegimos el administrador de la cuenta
+                        Manager loggedManager = sessionInfo.loggedManager;
+                        // Recolectamos las fichadas sin registrar en el servidor
+                        ArrayList<SignUp> lstSignups = sDb.GetUnregisteredSignups(loggedManager);
+                        // Enviamos los fichados al servidor de W4U
+                        APIRequests.Enroll(lstSignups, loggedManager, getApplicationContext());
+                    }
 
-        } catch(Resources.NotFoundException nfe){ }
-        catch(Exception e){
-            Log.e("GettingSignUps", e.getMessage());
-        }
+                } catch(Resources.NotFoundException nfe){ }
+                catch(Exception e){
+                    Log.e("GettingSignUps", e.getMessage());
+                }
+            }
+        });
+        // Iniciamos el Thread
+        checkSignupsThread.start();
     }
 
     // Chequeamos si hay conectividad en la red
