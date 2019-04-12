@@ -3,6 +3,8 @@ package io.apps4u.fpdatabase;
 import android.content.ContentValues;
 import android.util.Base64;
 
+import java.util.Date;
+
 public class Manager {
     // Información de debuggeo
     private static final String DEBUG_USERNAME = "hsilveyra@megatech.la";
@@ -15,6 +17,7 @@ public class Manager {
     private String _companyName;
     private String _username;
     private String _password;
+    private Date _last_login;
 
     public String get_firstname() {
         return _firstname;
@@ -70,6 +73,14 @@ public class Manager {
 
     public void set_username(String _username) {
         this._username = _username;
+    }
+
+    public Date get_last_login() {
+        return _last_login;
+    }
+
+    public void set_last_login(Date _last_login) {
+        this._last_login = _last_login;
     }
 
     public ContentValues ToContentValues(){

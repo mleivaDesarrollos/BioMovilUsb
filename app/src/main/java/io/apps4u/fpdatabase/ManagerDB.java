@@ -9,11 +9,15 @@ import android.util.Base64;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ManagerDB extends SQLiteOpenHelper {
     public ManagerDB(Context context){
         super(context, Database.NAME, null, Database.VERSION);
     }
+
+    // Propedad que almacena la cantidad de dias que se mantiene logueada la session
+    public static final int DAYS_TO_KEEP_LOGGED = 15;
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) { }
@@ -30,6 +34,7 @@ public class ManagerDB extends SQLiteOpenHelper {
         public static final String COMPANY_NAME = "COMPANY_NAME";
         public static final String USERNAME = "USERNAME";
         public static final String PASSWORD = "PASSWORD";
+        public static final String TIMESTAMP = "LAST_LOGIN";
     }
 
     public ArrayList<Manager> GetAll(){
@@ -41,19 +46,9 @@ public class ManagerDB extends SQLiteOpenHelper {
             // Iteramos sobre todos los cursores
             Cursor c = db.rawQuery("SELECT * FROM " + TableDefinition.NAME, null);
             while(c.moveToNext()){
-                // Generamos un nuevo Manager
-                Manager newManager = new Manager();
-                // Agregamos los parametros
-                newManager.set_legajoId(c.getString(c.getColumnIndex(TableDefinition.LEGAJO)));
-                newManager.set_firstname(c.getString(c.getColumnIndex(TableDefinition.FIRSTNAME)));
-                newManager.set_companyId(c.getString(c.getColumnIndex(TableDefinition.COMPANY_ID)));
-                newManager.set_companyName(c.getString(c.getColumnIndex(TableDefinition.COMPANY_NAME)));
-                newManager.set_username(c.getString(c.getColumnIndex(TableDefinition.USERNAME)));
-                String password = c.getString(c.getColumnIndex(TableDefinition.PASSWORD));
-                password = new String(Base64.decode(password, Base64.DEFAULT), "UTF-8");
-                newManager.set_password(password);
+                Manager getManager = GetManagerByDatabaseCursor(c);
                 // Agregamos el maanger a la base de datos
-                lstManangers.add(newManager);
+                lstManangers.add(getManager);
             }
         } catch(Exception e){
             Log.e("ManagerDBHelperError", e.getMessage());
@@ -74,19 +69,25 @@ public class ManagerDB extends SQLiteOpenHelper {
         // Ejecutamos la consulta a la base de datos
         Cursor c = db.rawQuery("SELECT * FROM " + TableDefinition.NAME + " where " + TableDefinition.USERNAME + "=? and "+ TableDefinition.PASSWORD + " =?", new String[] {paramUsername, encriptedPassword});
         if(c.moveToNext()) {
-            // Generamos una nueva instancia de Manager
-            manager = new Manager();
-            // Cargamos los datos del administrador
-            manager.set_legajoId(c.getString(c.getColumnIndex(TableDefinition.LEGAJO)));
-            manager.set_firstname(c.getString(c.getColumnIndex(TableDefinition.FIRSTNAME)));
-            manager.set_lastname(c.getString(c.getColumnIndex(TableDefinition.LASTNAME)));
-            manager.set_companyId(c.getString(c.getColumnIndex(TableDefinition.COMPANY_ID)));
-            manager.set_companyName(c.getString(c.getColumnIndex(TableDefinition.COMPANY_NAME)));
-            manager.set_username(paramUsername);
-            manager.set_password(paramPassword);
         }
         // Devolvemos el valor procesado
         return manager;
+    }
+
+    // Método que se encarga de levantar el ultimo administrador logueado en la base de datos
+    public Manager GetLastLoggedManager(){
+        // Disponemos del administrador a procesar
+        Manager lastLogManager = null;
+        // Obtenemos un objeto de lectura de base de datos
+        SQLiteDatabase db = getReadableDatabase();
+        // Disponemos un cursor para iterar sobre los resultados
+        Cursor c = db.rawQuery("SELECT * FROM " + TableDefinition.NAME + " ORDER BY " + TableDefinition.TIMESTAMP + " DESC LIMIT 1", null);
+        // Validamos si existe una respuesta
+        if(c.moveToNext()) {
+            // Generamos un nuevo administrador
+            lastLogManager = GetManagerByDatabaseCursor(c);
+        }
+        return lastLogManager;
     }
 
     public boolean IsAlreadySaved(String paramUsername){
@@ -111,6 +112,7 @@ public class ManagerDB extends SQLiteOpenHelper {
                 managerToUpdate.get_companyId(),
                 managerToUpdate.get_companyName(),
                 encodedPassword,
+                Database.GetFormattedDate(managerToUpdate.get_last_login()),
                 managerToUpdate.get_username()
         };
         // Ejecutamos el SQL
@@ -119,7 +121,8 @@ public class ManagerDB extends SQLiteOpenHelper {
                 + TableDefinition.LASTNAME  + "=?, "
                 + TableDefinition.COMPANY_ID + "=?, "
                 + TableDefinition.COMPANY_NAME + "=?, "
-                + TableDefinition.PASSWORD + "=? "
+                + TableDefinition.PASSWORD + "=?, "
+                + TableDefinition.TIMESTAMP + "=? "
                 + " WHERE " + TableDefinition.USERNAME + "=?", params);
     }
 
@@ -138,7 +141,8 @@ public class ManagerDB extends SQLiteOpenHelper {
                     paramManager.get_companyId(), // 3
                     paramManager.get_companyName(), // 4
                     paramManager.get_username(), // 5
-                    encodedPassword // 6
+                    encodedPassword, // 6
+                    Database.GetFormattedDate(paramManager.get_last_login()),
             };
             // Ejecutamos el Query
             db.execSQL("INSERT INTO " + TableDefinition.NAME + " " +
@@ -148,10 +152,35 @@ public class ManagerDB extends SQLiteOpenHelper {
                     + TableDefinition.COMPANY_ID + ", "
                     + TableDefinition.COMPANY_NAME + ", "
                     + TableDefinition.USERNAME + ", "
-                    + TableDefinition.PASSWORD +
-                    ") VALUES (?, ?, ?, ?, ?, ?, ?)", params);
+                    + TableDefinition.PASSWORD + ", "
+                    + TableDefinition.TIMESTAMP + " "
+                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?)", params);
         } catch(Exception e){
             Log.e("AddManagerError", e.getMessage());
         }
+    }
+
+    private Manager GetManagerByDatabaseCursor(Cursor c){
+        // Generamos un nuevo Manager
+        Manager newManager = new Manager();
+        try{
+            // Agregamos los parametros
+            newManager.set_legajoId(c.getString(c.getColumnIndex(TableDefinition.LEGAJO)));
+            newManager.set_firstname(c.getString(c.getColumnIndex(TableDefinition.FIRSTNAME)));
+            newManager.set_lastname(c.getString(c.getColumnIndex(TableDefinition.LASTNAME)));
+            newManager.set_companyId(c.getString(c.getColumnIndex(TableDefinition.COMPANY_ID)));
+            newManager.set_companyName(c.getString(c.getColumnIndex(TableDefinition.COMPANY_NAME)));
+            newManager.set_username(c.getString(c.getColumnIndex(TableDefinition.USERNAME)));
+            Date dateFromDatabase = new Date(Long.MIN_VALUE);
+            try{
+                dateFromDatabase = Database.FORMATDATE_W4U.parse(c.getString(c.getColumnIndex(TableDefinition.TIMESTAMP)));
+            } catch (Exception e) { // Es posible que este mal parseado o vacio
+            }
+            newManager.set_last_login(dateFromDatabase);
+            String password = c.getString(c.getColumnIndex(TableDefinition.PASSWORD));
+            password = new String(Base64.decode(password, Base64.DEFAULT), "UTF-8");
+            newManager.set_password(password);
+        } catch(Exception e){ Log.e("GetManagerByCursor", e.getMessage());  }
+        return newManager;
     }
 }

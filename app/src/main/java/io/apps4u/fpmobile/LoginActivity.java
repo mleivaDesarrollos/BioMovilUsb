@@ -32,7 +32,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.apps4u.fpdatabase.DatabaseHelper;
 import io.apps4u.fpdatabase.Manager;
@@ -73,39 +75,81 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         CheckDatabase();
-        setupActionBar();
-        // Set up the login form.
-        mEmailView = (AutoCompleteTextView) findViewById(R.id.txtUsername);
-        populateAutoComplete();
+        Manager recentlyLogged = getManagerRecentlyLogged();
+        if(recentlyLogged != null){
+            // Si el logueo es distinto a null, significa que el método devolvió una variable, por lo que guardamos esa variable en los datos de Session
+            Session CurrentSession = (Session) getApplication();
+            // Establecemos el administrador de la actual sesion
+            CurrentSession.loggedManager = recentlyLogged;
+            // Levantamos el intent
+            Intent intent = new Intent(getApplicationContext(), ActivityMain.class);
+            // Iniciamos la actividad
+            startActivity(intent);
+        } else {
+            setupActionBar();
+            // Set up the login form.
+            mEmailView = (AutoCompleteTextView) findViewById(R.id.txtUsername);
+            populateAutoComplete();
 
-        mPasswordView = (EditText) findViewById(R.id.txtPassword);
-        mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
-                    return true;
+            mPasswordView = (EditText) findViewById(R.id.txtPassword);
+            mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                    if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                        attemptLogin();
+                        return true;
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.btnLogin);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                attemptLogin();
-            }
-        });
+            Button mEmailSignInButton = (Button) findViewById(R.id.btnLogin);
+            mEmailSignInButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    attemptLogin();
+                }
+            });
 
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-        // Validamos si estamos modo debuggeo
-        CheckDebugMode();
+            mLoginFormView = findViewById(R.id.login_form);
+            mProgressView = findViewById(R.id.login_progress);
+            // Validamos si estamos modo debuggeo
+            CheckDebugMode();
+        }
     }
 
     private void CheckDatabase(){
         DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
+    }
+
+    private Manager getManagerRecentlyLogged(){
+        // Levantamos una nueva instancia de base de datos
+        ManagerDB mDB = new ManagerDB(getApplicationContext());
+        // Obtenemos el administrador
+        Manager mng = mDB.GetLastLoggedManager();
+        // Validamos si hay algún usuario logueado
+        if(mng != null){
+            // Obtenemos la fecha actual
+            Date nowTime = new Date();
+            // Obtenemos la diferencia de tiempo en milisegundos
+            long diffMs = Math.abs(nowTime.getTime() - mng.get_last_login().getTime());
+            if(!Session.DEBUG){
+                // Calculamos la diferencia en dias
+                long diff = TimeUnit.DAYS.convert(diffMs, TimeUnit.MILLISECONDS);
+                // Validamos si la diferencia en dias es menor o igual al máximo
+                if(diff <= ManagerDB.DAYS_TO_KEEP_LOGGED){
+                    return mng;
+                }
+            } else {
+                // En modo debug, validamos si en 10 segundos se cierra la sesión
+                long diff = TimeUnit.SECONDS.convert(diffMs, TimeUnit.MILLISECONDS);
+                // Calculamos que la diferencia sea menor que 10
+                if(diff <= 10){
+                    return mng;
+                }
+            }
+        }
+        return null;
     }
 
     private void CheckDebugMode(){
@@ -345,7 +389,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 }
                 // Cargamos el ayudante de base de datos
                 ManagerDB mDb = new ManagerDB(getApplicationContext());
-                mDb.getWritableDatabase();
+                // Si llegamos a esta instancia, significa que hay que registrar una nueva fecha
+                loggedManager.set_last_login(new Date());
                 // Validamos si el usuario ya se encuentra cargado en la base de datos
                 if(mDb.IsAlreadySaved(loggedManager.get_username())){
                     // Ejecutamos la actualización de la base de datos

@@ -24,10 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.FileWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +33,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.apps4u.fpdatabase.Coordinate;
+import io.apps4u.fpdatabase.Database;
 import io.apps4u.fpdatabase.Empleado;
 import io.apps4u.fpdatabase.EmpleadoDB;
 import com.fgtit.fpcore.FPMatch;
@@ -65,7 +63,6 @@ public class ActivityMain extends Activity {
     private static final String ADDRESS_NOT_FOUND = "Dirección no localizada";
     private static final String SOURCE_ENROLL = "Fichada bajo W4U Bio Movíl";
 
-    private static final DateFormat FORMATDATE_W4U = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     public LocationChecker locationChecker;
 
     private static final Double NO_COORDINATES = 0D;
@@ -404,7 +401,7 @@ public class ActivityMain extends Activity {
         // Establecemos las direcciones
         newSignIn.set_address(GetAddress(currentCoordinates));
         // Configuramos el horario de la fichada
-        newSignIn.set_timestamp(FORMATDATE_W4U.format((new Date())));
+        newSignIn.set_timestamp(Database.GetCurrentFormattedDateString());
         // TODO AQUI IRIA LA VALIDACION ONLINE
         // Levantamos la instancia de base de datos local para almacenar los resultados de la fichada
         SignUpDB suDB = new SignUpDB(getApplicationContext());

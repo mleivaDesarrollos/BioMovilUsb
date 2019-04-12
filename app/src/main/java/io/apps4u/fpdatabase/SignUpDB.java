@@ -10,13 +10,17 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.apps4u.fpmobile.Session;
 
 public class SignUpDB extends SQLiteOpenHelper {
 
     private Context _context;
+
 
     public SignUpDB(Context context){
         super(context, Database.NAME, null, Database.VERSION);
