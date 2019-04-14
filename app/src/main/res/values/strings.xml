@@ -21,7 +21,9 @@
     <string name="login_title">Ingreso a W4u Bio Movil</string>
     <!--Strings related to new enroll-->
     <string name="hint_employee_number">Legajo del empleado</string>
+    <string name="hint_validate_legajo">Validar el legajo</string>
     <string name="hint_employee_fullname">Nombre y apellido</string>
+    <string name="cannot_enroll_employee_without_fpdevice">Para enrolar un empleado debe estar conectado el lector de huellas.</string>
     <string name="button_read_fingerprint">Leer Huella</string>
     <string name="button_validate_legajo">Validar Legajo</string>
     <string name="button_save_new_enroll">Guardar Empleado</string>
@@ -33,8 +35,7 @@
     <!--Strings related to menu-->
     <string name="menu_show_employees">Empleados</string>
     <string name="menu_new_employee">Nuevo Empleado</string>
-    <string name="menu_show_companys">Empresas</string>
-    <string name="menu_new_company">Nueva Empresa</string>
+    <string name="menu_show_today_signups">Fichadas del dia</string>
     <!--String for fill space on view design-->
     <string name="placeholder">placeholder</string>.
     <string name="getting_coordinates">Recolectando coordenadas del GPS. Aguarde por favor...</string>

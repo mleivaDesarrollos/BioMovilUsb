@@ -8,4 +8,6 @@
     <color name="verde">#40A99C</color>
     <color name="azul">#337AB7</color>
     <color name="slight_dark_with_transparency">#30000000</color>
+    <color name="abm_input_colors_background">#74000000</color>
+    <color name="abm_input_colors_text_buttons_disabled">#B9B9B9</color>
 </resources>

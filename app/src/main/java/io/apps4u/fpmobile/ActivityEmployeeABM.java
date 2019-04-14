@@ -56,40 +56,11 @@ public class ActivityEmployeeABM extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_abm);
-        ivImage = (ImageView) findViewById(R.id.fpImage);
+        ivImage = findViewById(R.id.fpImage);
         Button btnScanear = findViewById(R.id.btnScanear);
-        fpdev.SetInstance(this);
-        fpdev.SetUpImage(true);
-        switch (fpdev.OpenDevice()) {
-            case 0:
-                initHandler();
-                isopening = true;
-                Toast.makeText(getApplicationContext(), "Dispositivo OK", Toast.LENGTH_SHORT).show();
-                break;
-            case -1:
-                //  tvStatus.setText("Link Device Fail");
-                break;
-            case -2:
-                // tvStatus.setText("Evaluation version expires");
-                break;
-            case -3:
-                // tvStatus.setText("Open Device Fail");
-                break;
+        if(!isFingerPrintReady()){
+            cannotEnrollWithoutFingerprint();
         }
-
-        btnScanear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                workType = WORKTYPE_NULL;
-                TimerStop();
-                SystemClock.sleep(200);
-                TimerStart();
-                Toast.makeText(getApplicationContext(), R.string.txt_fp1, Toast.LENGTH_SHORT).show();
-                workType = WORKTYPE_ENROL;
-                enrolCount = 0;
-                totalCount = 0;
-            }
-        });
         if(Session.DEBUG) onDebug();
     }
 
@@ -105,11 +76,56 @@ public class ActivityEmployeeABM extends Activity {
         GuardarEmpleado();
     }
 
+
+    private boolean isFingerPrintReady(){
+        fpdev.SetInstance(this);
+        fpdev.SetUpImage(true);
+        if (isopening) {
+            fpdev.CloseDevice();
+            TimerStop();
+            isopening = false;
+        }
+        switch (fpdev.OpenDevice()) {
+            case 0:
+                return true;
+            case -1:
+                return false;
+            case -2:
+            case -3:
+                Log.e("FPDevice", "No esta listo, contiene errores a verificar.");
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    // Evento que controla el inicio de scaneo de huella
+    public void btnScanearOnClick(View view){
+        if(isFingerPrintReady()){
+            isopening = true;
+            initHandler();
+            workType = WORKTYPE_NULL;
+            TimerStop();
+            SystemClock.sleep(200);
+            TimerStart();
+            Toast.makeText(getApplicationContext(), R.string.txt_fp1, Toast.LENGTH_SHORT).show();
+            workType = WORKTYPE_ENROL;
+            enrolCount = 0;
+            totalCount = 0;
+        } else {
+            cannotEnrollWithoutFingerprint();
+        }
+    }
+
+    private void cannotEnrollWithoutFingerprint(){
+        Toast.makeText(getApplicationContext(), R.string.cannot_enroll_employee_without_fpdevice, Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             fpdev.CloseDevice();
-            Toast.makeText(getApplicationContext(), "Disp Cerrado", Toast.LENGTH_SHORT).show();
             isopening = false;
             this.finish();
             return true;
@@ -170,6 +186,11 @@ public class ActivityEmployeeABM extends Activity {
             newEmployee.set_managerid(manager.get_legajoId());
             // Guardamos el empleado en la base de datos
             emp.Save(newEmployee);
+            // Una vez completada la tarea de guardar el empleado finalizamos la actividad de crear empleado
+            Toast.makeText(getApplicationContext(), "Se registro a " + newEmployee.get_fullname() + " de manera correcta.", Toast.LENGTH_SHORT).show();
+            // Cerramos la actividad
+            finish();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -195,8 +216,21 @@ public class ActivityEmployeeABM extends Activity {
                                     EditText txtEmployeeFullname = (EditText) findViewById(R.id.txtEmployeFullname);
                                     txtEmployeeFullname.setText(validatedEmployee.get_fullname());
                                     // Al confirmar el usuario, levantamos el botón para lectura de huella
-                                    Button btnScanear = (Button) findViewById(R.id.btnScanear);
-                                    btnScanear.setEnabled(true);
+                                    Button btnScanear = findViewById(R.id.btnScanear);
+                                    // Habilitamos el boton scaneo
+                                    enableButton(btnScanear);
+                                    // Obtenemos el botón de validación de legajo
+                                    Button btnValidateLegajo = findViewById(R.id.btnValidatelegajo);
+                                    // Inhabilitamos el botón
+                                    disableButton(btnValidateLegajo);
+                                    // Disponemos que no sea posible editar nuevamente el legajo
+                                    txtEmployeeNumber.setEnabled(false);
+                                    // Por motivos visuales se establece como color gris obscuro
+                                    txtEmployeeNumber.setTextColor(getResources().getColor(R.color.gray_background));
+                                    // Activamos la edicion del nombre y apellido
+                                    txtEmployeeFullname.setEnabled(true);
+                                    // Cambiamos el hint para que indique lo que se necesita luego de hacer correcta validacion
+                                    txtEmployeeFullname.setHint(getResources().getString(R.string.hint_employee_fullname));
                                 }
                             });
                         } catch(Exception e){
@@ -258,8 +292,8 @@ public class ActivityEmployeeABM extends Activity {
                                             Button btnGuardar = (Button) findViewById(R.id.btnGuardar);
                                             Button btnScanear = (Button) findViewById(R.id.btnScanear);
                                             // Habilitamos el botón guardar y deshabilitamos el botón scanear
-                                            btnGuardar.setEnabled(true);
-                                            btnScanear.setEnabled(false);
+                                            enableButton(btnGuardar);
+                                            disableButton(btnScanear);
                                             // guardarenDB(Base64.encodeToString(refdata,0));
                                             Toast.makeText(getApplicationContext(), "Se ha tomado la huella con exito", Toast.LENGTH_SHORT).show();
                                         } else {
@@ -317,5 +351,20 @@ public class ActivityEmployeeABM extends Activity {
                 super.handleMessage(msg);
             }
         };
+    }
+
+    private void enableButton(Button paramButton){
+        // Configuramos el color para habilitar el boton
+        paramButton.setTextColor(getResources().getColor(android.R.color.white));
+        // Habilitamos el boton
+        paramButton.setEnabled(true);
+
+    }
+
+    private void disableButton(Button paramButton){
+        // Configuramos el color para deshabilitar el boton
+        paramButton.setTextColor(getResources().getColor(R.color.abm_input_colors_text_buttons_disabled));
+        // Inhabilitamos el boton
+        paramButton.setEnabled(false);
     }
 }

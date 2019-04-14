@@ -363,6 +363,8 @@ color abc_tint_edittext
 color abc_tint_seek_thumb
 color abc_tint_spinner
 color abc_tint_switch_track
+color abm_input_colors_background
+color abm_input_colors_text_buttons_disabled
 color accent_material_dark
 color accent_material_light
 color azul
@@ -913,6 +915,7 @@ string app_titel
 string button_read_fingerprint
 string button_save_new_enroll
 string button_validate_legajo
+string cannot_enroll_employee_without_fpdevice
 string dialog_accept
 string dialog_cancel
 string dialog_delete
@@ -924,6 +927,7 @@ string error_invalid_password
 string getting_coordinates
 string hint_employee_fullname
 string hint_employee_number
+string hint_validate_legajo
 string login_title
 string menu_new_company
 string menu_new_employee

@@ -144,7 +144,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 // En modo debug, validamos si en 10 segundos se cierra la sesión
                 long diff = TimeUnit.SECONDS.convert(diffMs, TimeUnit.MILLISECONDS);
                 // Calculamos que la diferencia sea menor que 10
-                if(diff <= 10){
+                if(diff <= 120){
                     return mng;
                 }
             }

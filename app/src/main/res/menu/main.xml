@@ -13,6 +13,9 @@
         android:orderInCategory="104"
         android:title="@string/menu_new_employee"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/mnu_show_today_signups"
+        android:title="Item" />
 
 
 </menu>

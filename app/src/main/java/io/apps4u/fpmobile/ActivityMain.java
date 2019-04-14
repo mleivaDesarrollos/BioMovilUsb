@@ -13,6 +13,8 @@ import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.SystemClock;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -351,10 +353,9 @@ public class ActivityMain extends Activity {
             case 0:
                 return true;
             case -1:
+
                 return false;
             case -2:
-                Log.e("FPDevice", "No esta listo, contiene errores a verificar.");
-                return false;
             case -3:
                 Log.e("FPDevice", "No esta listo, contiene errores a verificar.");
                 return false;
@@ -529,11 +530,38 @@ public class ActivityMain extends Activity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu){
+        // Levantamos el item de menu relacionado con los nuevos empleados
+        MenuItem mnuNewEmployee = menu.findItem(R.id.mnu_new_employee);
+        // Para poder cambiar el color debemos establecer un nuevo string
+        SpannableString s = new SpannableString(getResources().getString(R.string.menu_new_employee));
+        // Establecemos la variable color
+        ForegroundColorSpan fcs;
+        // Si el lector no esta listo se inhabilita esta funcion
+        if(!isFingerPrintReady()){
+            // Cambiamos el color del menu item
+            fcs = new ForegroundColorSpan(getResources().getColor(R.color.abm_input_colors_text_buttons_disabled));
+        } else{
+            // Cambiamos el color del menu item
+            fcs = new ForegroundColorSpan(getResources().getColor(R.color.verde));
+        }
+        s.setSpan(fcs, 0, s.length(), 0);
+        // Establecemos el color
+        mnuNewEmployee.setTitle(s);
+        // Por defecto devolvemos verdadero
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mnu_new_employee:
-                Intent intentEnrol = new Intent(this, ActivityEmployeeABM.class);
-                this.startActivity(intentEnrol);
+                if(isFingerPrintReady()){
+                    Intent intentEnrol = new Intent(this, ActivityEmployeeABM.class);
+                    this.startActivity(intentEnrol);
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.cannot_enroll_employee_without_fpdevice, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.mnu_show_employees:
                 // another startActivity, this is for item with id "menu_item2"
