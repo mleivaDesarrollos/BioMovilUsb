@@ -657,6 +657,7 @@ drawable tooltip_frame_dark
 drawable tooltip_frame_light
 id ALT
 id CTRL
+id ConstraintLayout
 id FUNCTION
 id META
 id SHIFT
@@ -745,6 +746,7 @@ id message
 id middle
 id mnu_new_employee
 id mnu_show_employees
+id mnu_show_today_signups
 id multiply
 id never
 id none
@@ -809,6 +811,8 @@ id txtEmployeeNumber
 id txtLegajo
 id txtNombre
 id txtPassword
+id txtSignupListFullname
+id txtSignupListTimestamp
 id txtUsername
 id uniform
 id up
@@ -852,7 +856,9 @@ layout activity_employee_abm
 layout activity_login
 layout activity_main
 layout activity_show_employees
+layout activity_show_signups
 layout empleado_list
+layout layout_signups_list
 layout notification_action
 layout notification_action_tombstone
 layout notification_media_action
@@ -929,10 +935,9 @@ string hint_employee_fullname
 string hint_employee_number
 string hint_validate_legajo
 string login_title
-string menu_new_company
 string menu_new_employee
-string menu_show_companys
 string menu_show_employees
+string menu_show_today_signups
 string missing_fingerprint_devices
 string permission_rationale
 string placeholder

@@ -85,6 +85,46 @@ public class SignUpDB extends SQLiteOpenHelper {
                 + "='true' WHERE " + TableDefinition._ID + "=?", new String[]{Integer.toString(paramSignUp.get_id())});
     }
 
+    // Metodo que devuelve un listado correspondiente a las fichadas del dia de la fecha
+    public ArrayList<SignUp> GetTodaySignups(Manager paramManager){
+        // Preparamos el array a devolver
+        ArrayList<SignUp> lstSignupsOfToday = null;
+        try{
+            // Obtenemos una instancia de lectura de base de datos
+            SQLiteDatabase db = getReadableDatabase();
+            // Ejecutamos la consulta sobre la base de datos
+            Cursor c = db.rawQuery("SELECT emps." + EmpleadoDB.TableDefinition.FULLNAME + " as employee_fullname, " +
+                    "sgps." + TableDefinition.TIMESTAMP +" as signup_time FROM " + TableDefinition.NAME + " as sgps" +
+                    " INNER JOIN " + EmpleadoDB.TableDefinition.NAME + " as emps " +
+                    " ON " + TableDefinition.LEGAJO + " = " + EmpleadoDB.TableDefinition.LEGAJO +
+                    " WHERE strftime('%Y-%m-%d', sgps." + TableDefinition.TIMESTAMP + ") = date('now', 'localtime') AND " +
+                    " emps." + EmpleadoDB.TableDefinition.MANAGER_ID + " IN " +
+                        " (SELECT " + ManagerDB.TableDefinition.LEGAJO +" FROM "
+                        + ManagerDB.TableDefinition.NAME + " WHERE " + ManagerDB.TableDefinition.COMPANY_ID + " = " + paramManager.get_companyId() +")", null);
+            // Generamos una nueva instancia del listado
+            lstSignupsOfToday = new ArrayList<>();
+            // Iteramos sobre el cursor
+            while(c.moveToNext()){
+                // Generamos una nueva instancia de fichada
+                SignUp todaySignup = new SignUp();
+                // Generamos una nueva instancia de empleado
+                Empleado sgnEmployee = new Empleado();
+                // Establecemos el nombre del empleado
+                sgnEmployee.set_fullname(c.getString(c.getColumnIndex("employee_fullname")));
+                // Establecemos el horario de fichada
+                todaySignup.set_timestamp(c.getString(c.getColumnIndex("signup_time")));
+                // Ubicamos el empleado dentro del item de fichado
+                todaySignup.set_empleado(sgnEmployee);
+                // Agregamos la fichada al listado
+                lstSignupsOfToday.add(todaySignup);
+            }
+        } catch(Exception e){
+            Log.e("TodaySignup", e.getMessage());
+        }
+        // Devolvemos el listado procesado
+        return lstSignupsOfToday;
+    }
+
     // Devuelve una lista de fichadas que aun no hayan sido registradas en el servidor
     public ArrayList<SignUp> GetUnregisteredSignups(Manager paramManager){
         try{

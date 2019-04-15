@@ -17,9 +17,9 @@ public class ViewEmployeeList extends ArrayAdapter<String> {
     private final String[] imageId;
     public ViewEmployeeList(Activity context,
                             String[] nombre, String[] imageId, String[] legajo) {
-        super(context, R.layout.empleado_list, nombre);this.context = context;
-        this
-        .nombre = nombre;
+        super(context, R.layout.empleado_list, nombre);
+        this.context = context;
+        this.nombre = nombre;
         this.imageId = imageId;
         this.legajo = legajo;
     }
