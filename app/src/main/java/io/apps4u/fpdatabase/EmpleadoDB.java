@@ -46,6 +46,20 @@ public class EmpleadoDB extends SQLiteOpenHelper {
         }
     }
 
+    // Validamos si el legajo está guardado en la base de datos
+    public boolean isAlreadySaved(String paramLegajo) {
+        // Recolectamos una instancia de la base de datos
+        SQLiteDatabase db = getReadableDatabase();
+        // Ejecutamos la consulta y validamos la existencia del empleado
+        Cursor c = db.rawQuery("SELECT 1 FROM " + TableDefinition.NAME + " WHERE " + TableDefinition.LEGAJO + " =?", new String[]{ paramLegajo});
+        if(c.moveToNext()){
+            // Si encuentra un registro, el empleado ya existe
+            return true;
+        }
+        // Si el registro no esta, el empleado no esta guardado
+        return false;
+    }
+
     public boolean Delete(Empleado empleado){
         // Obtenemos una instancia de lectura de base de datos
         SQLiteDatabase db = getWritableDatabase();

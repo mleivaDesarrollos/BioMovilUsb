@@ -13,6 +13,7 @@ import android.os.Message;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.SystemClock;
+import android.support.constraint.ConstraintLayout;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Base64;
@@ -115,7 +116,9 @@ public class ActivityMain extends Activity {
         // Validamos si el dispositivo esta listo para la fichada
         CheckIsReadyToFingerPrint();
         // Chequeamos las fichadas que aun no han sido enviadas a servidor
-        //checkAndRegisterEnrollsOnServer();
+        checkAndRegisterEnrollsOnServer();
+        // Chequeamos la ultima fichada
+        checkTodaySignups();
     }
 
     @SuppressLint("NewApi")
@@ -264,6 +267,8 @@ public class ActivityMain extends Activity {
                                             try{
                                                 // Registramos la fichada
                                                 registerMatchEmployee(employee);
+                                                // Actualizamos la ultima fichada
+                                                checkTodaySignups();
                                                 // agregar el post a la fichada
                                                 Toast.makeText(getApplicationContext(), R.string.txt_fichaok, Toast.LENGTH_SHORT).show();
                                             } catch(SecurityException e) {
@@ -294,15 +299,30 @@ public class ActivityMain extends Activity {
         if(isFingerPrintReady()){
             // Validamos si las coordenadas fueron cargadas
             if(LONGITUDE != NO_COORDINATES && LATITUDE != NO_COORDINATES){
-                // Configuramos el nuevo evento de listener
-                btnFichar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        FicharWithCoordinatesAcquired();
-                    }
-                });
-                // Cambiamos el color de fondo del boton
-                btnFichar.setBackgroundColor(getResources().getColor(R.color.azul));
+                // Validamos si hay algun empleado cargado en la base local
+                EmpleadoDB eDB = new EmpleadoDB(getApplicationContext());
+                // Separamos el administrador de la aplicacion
+                Manager loggedManager = ((Session) getApplication()).loggedManager;
+                // Recolectamos los empleados almacenados
+                List<Empleado> lstEmployees = eDB.GetAll(loggedManager.get_legajoId());
+                if(lstEmployees != null && lstEmployees.size() > 0){
+                    // Configuramos el nuevo evento de listener
+                    btnFichar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FicharWithCoordinatesAcquired();
+                        }
+                    });
+                    // Cambiamos el color de fondo del boton
+                    btnFichar.setBackgroundColor(getResources().getColor(R.color.azul));
+                } else { // Si no hay ningun empleado cargado
+                    btnFichar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            MissingEmployeesMessage();
+                        }
+                    });
+                }
                 // Si las coordenadas no estan cargadas
             } else {
                 // Seteamos el evento de click cuando las coordenadas no estan cargadas
@@ -330,6 +350,10 @@ public class ActivityMain extends Activity {
 
     public void MissingCordinatesMessage(){
         Toast.makeText(getApplicationContext(), R.string.getting_coordinates, Toast.LENGTH_LONG).show();
+    }
+
+    public void MissingEmployeesMessage(){
+        Toast.makeText(getApplicationContext(), R.string.error_no_employees, Toast.LENGTH_SHORT).show();
     }
 
     public void MissingFingerPrintDeviceMesage(){
@@ -402,12 +426,13 @@ public class ActivityMain extends Activity {
         // Establecemos las direcciones
         newSignIn.set_address(GetAddress(currentCoordinates));
         // Configuramos el horario de la fichada
-        newSignIn.set_timestamp(Database.GetCurrentFormattedDateString());
-        // TODO AQUI IRIA LA VALIDACION ONLINE
+        newSignIn.set_timestamp(Database.GetCurrentFormattedDatabaseDate());
         // Levantamos la instancia de base de datos local para almacenar los resultados de la fichada
         SignUpDB suDB = new SignUpDB(getApplicationContext());
         // Guardamos el signup en la base de datos
         suDB.Add(newSignIn);
+        // Registramos la fichada en el momento
+        checkAndRegisterEnrollsOnServer();
     }
 
     // Método que carga los enrolamientos en el servidor de la API
@@ -439,6 +464,47 @@ public class ActivityMain extends Activity {
         });
         // Iniciamos el Thread
         checkSignupsThread.start();
+    }
+
+    private void checkTodaySignups(){
+        try{
+            // Levantamos una instancia de la base de datos
+            SignUpDB sDB = new SignUpDB(getApplicationContext());
+            // Recolectamos el administrador de la session
+            Manager loggedManager = ((Session) getApplication()).loggedManager;
+            // Recolectamos las ultimas fichadas correspondientes del día de hoy
+            List<SignUp> todaySignups = sDB.GetTodaySignups(loggedManager);
+            // Levantamos los dos layout
+            ConstraintLayout noSignupsLayout = findViewById(R.id.WithoutLastSignupLayout);
+            ConstraintLayout withSignupsLayout = findViewById(R.id.WithLastSignupLayout);
+            // Validamos si el listado se encuentra nulo
+            if(todaySignups != null && todaySignups.size() > 0) {
+                // Obtenemos la ultima fichada
+                SignUp lastSignup = todaySignups.get(todaySignups.size() - 1);
+                // Ocultamos el layout que muestra que no hay fichadas
+                noSignupsLayout.setVisibility(View.GONE);
+                // Configuramos el panel que muestre los datos de la fichada
+                TextView lblLegajo = findViewById(R.id.lblLegajoDataLastSignup);
+                TextView lblFullname = findViewById(R.id.lblFullnameDataLastSignup);
+                TextView lblTime = findViewById(R.id.lblTimeDataLastSignup);
+                // Establecemos los valores de la ultima fichada
+                lblLegajo.setText(lastSignup.get_empleado().get_legajo());
+                lblFullname.setText(lastSignup.get_empleado().get_fullname());
+                // Convertimos el formato de base de datos a formato solamente hora
+                String strLastSignupTime = Database.GetHourOnlyFromDatabaseTime(lastSignup.get_timestamp());
+                lblTime.setText(strLastSignupTime);
+                // Mostramos el layout de ultima fichada
+                withSignupsLayout.setVisibility(View.VISIBLE);
+            } else{
+                // Mostramos en la interfaz que no hay fichadas el día de hoy
+                noSignupsLayout.setVisibility(View.VISIBLE);
+                // Ocultamos llegado el caso de que sea necesario el layout de ultima fichada
+                withSignupsLayout.setVisibility(View.GONE);
+            }
+
+        } catch (Exception e){
+            Log.e("GetSignups", e.getMessage());
+        }
     }
 
     // Chequeamos si hay conectividad en la red

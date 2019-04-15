@@ -28,5 +28,173 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/LastSignupRegister"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        android:background="@color/abm_input_colors_background"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnFichar">
+
+        <TextView
+            android:id="@+id/lblMainLastSignup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:text="@string/last_signup_today"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/WithoutLastSignupLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lblMainLastSignup">
+
+            <TextView
+                android:id="@+id/lblNoSignups"
+                android:layout_width="wrap_content"
+                android:layout_height="164dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center_horizontal"
+                android:text="@string/no_registered_signups"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/WithLastSignupLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lblMainLastSignup">
+
+            <TextView
+                android:id="@+id/lblLegajoLastSignup"
+                android:layout_width="100dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_legajo_last_signup"
+                android:textAlignment="textEnd"
+                android:textColor="@color/label_last_input"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/lblLegajoDataLastSignup"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="24dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="6dp"
+                android:text="LEGAJO"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lblLegajoLastSignup"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/lblLegajoLastSignup" />
+
+            <TextView
+                android:id="@+id/lblFullnameDataLastSignup"
+                android:layout_width="138dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="24dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="6dp"
+                android:text="FULLNAME"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lblFullnameLastSignup"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/lblFullnameLastSignup" />
+
+            <TextView
+                android:id="@+id/lblTimeDataLastSignup"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="24dp"
+                android:gravity="center_vertical"
+                android:paddingLeft="6dp"
+                android:text="TIME"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/lblTimeLastSignup"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.428"
+                app:layout_constraintStart_toEndOf="@+id/lblTimeLastSignup" />
+
+            <TextView
+                android:id="@+id/lblFullnameLastSignup"
+                android:layout_width="101dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_fullname_last_signup"
+                android:textAlignment="textEnd"
+                android:textColor="@color/label_last_input"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lblLegajoLastSignup" />
+
+            <TextView
+                android:id="@+id/lblTimeLastSignup"
+                android:layout_width="103dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:gravity="center_vertical"
+                android:text="@string/label_time_last_signup"
+                android:textAlignment="textEnd"
+                android:textColor="@color/label_last_input"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lblFullnameLastSignup" />
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+
 
 </android.support.constraint.ConstraintLayout>

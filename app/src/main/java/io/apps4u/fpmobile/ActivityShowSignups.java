@@ -6,6 +6,7 @@ import android.widget.ListView;
 
 import java.util.List;
 
+import io.apps4u.fpdatabase.Database;
 import io.apps4u.fpdatabase.Manager;
 import io.apps4u.fpdatabase.SignUp;
 import io.apps4u.fpdatabase.SignUpDB;
@@ -36,7 +37,10 @@ public class ActivityShowSignups extends Activity {
             for(int signupsIndex = 0; signupsIndex < lstSignups.size(); signupsIndex++ ){
                 // Almacenamos los nombres y horarios
                 lstFullnames[signupsIndex] = lstSignups.get(signupsIndex).get_empleado().get_fullname();
-                lstTimes[signupsIndex] = lstSignups.get(signupsIndex).get_timestamp();
+                // Seperamos la fecha del fichado
+                String strTimeSingup = lstSignups.get(signupsIndex).get_timestamp();
+                strTimeSingup = Database.GetHourOnlyFromDatabaseTime(strTimeSingup);
+                lstTimes[signupsIndex] = strTimeSingup;
             }
             // Creamos un adaptador
             ViewSignupAdapter adapter = new ViewSignupAdapter(this, lstFullnames, lstTimes);

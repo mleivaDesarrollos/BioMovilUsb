@@ -114,6 +114,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mLoginFormView = findViewById(R.id.login_form);
             mProgressView = findViewById(R.id.login_progress);
             // Validamos si estamos modo debuggeo
+
             CheckDebugMode();
         }
     }
@@ -163,11 +164,14 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     }
 
     private void populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return;
+        // Levantmaos una instancia de gestor de base de datos
+        ManagerDB mDB = new ManagerDB(getApplicationContext());
+        // Recolectamos el administrador de la base de datos
+        Manager lastLoggedManager = mDB.GetLastLoggedManager();
+        if(lastLoggedManager != null){
+            // Establecemos el mail del usuario en el campo de ingreso
+            mEmailView.setText(lastLoggedManager.get_username());
         }
-
-        getLoaderManager().initLoader(0, null, this);
     }
 
     private boolean mayRequestContacts() {

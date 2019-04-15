@@ -93,14 +93,16 @@ public class SignUpDB extends SQLiteOpenHelper {
             // Obtenemos una instancia de lectura de base de datos
             SQLiteDatabase db = getReadableDatabase();
             // Ejecutamos la consulta sobre la base de datos
-            Cursor c = db.rawQuery("SELECT emps." + EmpleadoDB.TableDefinition.FULLNAME + " as employee_fullname, " +
+            Cursor c = db.rawQuery("SELECT " + "emps." + EmpleadoDB.TableDefinition.LEGAJO + " as employee_legajo, " +
+                    "emps." + EmpleadoDB.TableDefinition.FULLNAME + " as employee_fullname, " +
                     "sgps." + TableDefinition.TIMESTAMP +" as signup_time FROM " + TableDefinition.NAME + " as sgps" +
                     " INNER JOIN " + EmpleadoDB.TableDefinition.NAME + " as emps " +
                     " ON sgps." + TableDefinition.LEGAJO + " = emps." + EmpleadoDB.TableDefinition.LEGAJO +
                     " WHERE strftime('%Y-%m-%d', sgps." + TableDefinition.TIMESTAMP + ") = date('now', 'localtime') AND " +
                     " emps." + EmpleadoDB.TableDefinition.MANAGER_ID + " IN " +
                         " (SELECT " + ManagerDB.TableDefinition.LEGAJO +" FROM "
-                        + ManagerDB.TableDefinition.NAME + " WHERE " + ManagerDB.TableDefinition.COMPANY_ID + " = " + paramManager.get_companyId() +")", null);
+                        + ManagerDB.TableDefinition.NAME + " WHERE " + ManagerDB.TableDefinition.COMPANY_ID + " = " + paramManager.get_companyId() +")" +
+                    " ORDER BY signup_time ASC" , null);
             // Generamos una nueva instancia del listado
             lstSignupsOfToday = new ArrayList<>();
             // Iteramos sobre el cursor
@@ -111,6 +113,8 @@ public class SignUpDB extends SQLiteOpenHelper {
                 Empleado sgnEmployee = new Empleado();
                 // Establecemos el nombre del empleado
                 sgnEmployee.set_fullname(c.getString(c.getColumnIndex("employee_fullname")));
+                // Establecemos el legajo del empleado
+                sgnEmployee.set_legajo(c.getString(c.getColumnIndex("employee_legajo")));
                 // Establecemos el horario de fichada
                 todaySignup.set_timestamp(c.getString(c.getColumnIndex("signup_time")));
                 // Ubicamos el empleado dentro del item de fichado
@@ -119,6 +123,7 @@ public class SignUpDB extends SQLiteOpenHelper {
                 lstSignupsOfToday.add(todaySignup);
             }
         } catch(Exception e){
+            lstSignupsOfToday = null;
             Log.e("TodaySignup", e.getMessage());
         }
         // Devolvemos el listado procesado

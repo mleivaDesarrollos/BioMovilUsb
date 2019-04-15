@@ -16,6 +16,11 @@
     <string name="txt_fp1">Coloque su dedo en el lector</string>
     <string name="txt_fichaok">Ficho Ok </string>
     <string name="txt_fichafail">Error al verificar la huella</string>
+    <string name="last_signup_today">Ultima fichada del dia</string>
+    <string name="label_legajo_last_signup">Legajo : </string>
+    <string name="label_fullname_last_signup">Nombre : </string>
+    <string name="label_time_last_signup">Horario : </string>
+    <string name="no_registered_signups">No se ha fichado el dia de hoy</string>
     <string name="title_activity_enrol">Nueva Persona</string>
     <string name="title_activity_modify">Modificar Persona</string>
     <!--Strings related to login screen-->
@@ -23,6 +28,8 @@
     <!--Strings related to new enroll-->
     <string name="hint_employee_number">Legajo del empleado</string>
     <string name="hint_validate_legajo">Validar el legajo</string>
+    <string name="error_duplicated_employee">El empleado ya se encuentra registrado.</string>
+    <string name="error_no_employees">Para poder fichar se necesita cargar al menos un empleado.</string>
     <string name="hint_employee_fullname">Nombre y apellido</string>
     <string name="cannot_enroll_employee_without_fpdevice">Para enrolar un empleado debe estar conectado el lector de huellas.</string>
     <string name="button_read_fingerprint">Leer Huella</string>

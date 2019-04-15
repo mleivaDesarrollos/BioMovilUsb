@@ -57,15 +57,25 @@ public class ActivityEmployeeABM extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee_abm);
         ivImage = findViewById(R.id.fpImage);
-        Button btnScanear = findViewById(R.id.btnScanear);
         if(!isFingerPrintReady()){
             cannotEnrollWithoutFingerprint();
         }
+        // Levantamos la etiqueta de legajo para establecer la configuración del boton enter
+        EditText txtEmployeeNumber = findViewById(R.id.txtEmployeeNumber);
+        txtEmployeeNumber.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if((keyEvent.getAction() == KeyEvent.ACTION_UP) && (i == KeyEvent.KEYCODE_ENTER)){
+                    ValidarLegajo(view);
+                    return true;
+                }
+                return false;
+            }
+        });
         if(Session.DEBUG) onDebug();
     }
 
     private void onDebug(){
-
         EditText txtLegajoUsuario = (EditText) findViewById(R.id.txtEmployeeNumber);
         // Levantamos el legajo de prueba:
         txtLegajoUsuario.setText("1073");
@@ -87,6 +97,7 @@ public class ActivityEmployeeABM extends Activity {
         }
         switch (fpdev.OpenDevice()) {
             case 0:
+                isopening = true;
                 return true;
             case -1:
                 return false;
@@ -102,7 +113,6 @@ public class ActivityEmployeeABM extends Activity {
     // Evento que controla el inicio de scaneo de huella
     public void btnScanearOnClick(View view){
         if(isFingerPrintReady()){
-            isopening = true;
             initHandler();
             workType = WORKTYPE_NULL;
             TimerStop();
@@ -126,6 +136,7 @@ public class ActivityEmployeeABM extends Activity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             fpdev.CloseDevice();
+            TimerStop();
             isopening = false;
             this.finish();
             return true;
@@ -201,45 +212,57 @@ public class ActivityEmployeeABM extends Activity {
             // Levantamos el legajo solicitado
             final EditText txtEmployeeNumber = (EditText) findViewById(R.id.txtEmployeeNumber);
             final String legajo = txtEmployeeNumber.getText().toString();
-            Thread threadValidateLegajo = new Thread(new Runnable(){
-                @Override
-                public void run(){
-                    // Usando el método dispuesto
-                    final Empleado validatedEmployee = APIRequests.GetEmpleado(legajo, getApplication());
-                    // Validamos si el empleado es nulo
-                    if(validatedEmployee != null){
-                        try{
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run(){
-                                    // Levantamos la vista de empleado para nombre completo
-                                    EditText txtEmployeeFullname = (EditText) findViewById(R.id.txtEmployeFullname);
-                                    txtEmployeeFullname.setText(validatedEmployee.get_fullname());
-                                    // Al confirmar el usuario, levantamos el botón para lectura de huella
-                                    Button btnScanear = findViewById(R.id.btnScanear);
-                                    // Habilitamos el boton scaneo
-                                    enableButton(btnScanear);
-                                    // Obtenemos el botón de validación de legajo
-                                    Button btnValidateLegajo = findViewById(R.id.btnValidatelegajo);
-                                    // Inhabilitamos el botón
-                                    disableButton(btnValidateLegajo);
-                                    // Disponemos que no sea posible editar nuevamente el legajo
-                                    txtEmployeeNumber.setEnabled(false);
-                                    // Por motivos visuales se establece como color gris obscuro
-                                    txtEmployeeNumber.setTextColor(getResources().getColor(R.color.gray_background));
-                                    // Activamos la edicion del nombre y apellido
-                                    txtEmployeeFullname.setEnabled(true);
-                                    // Cambiamos el hint para que indique lo que se necesita luego de hacer correcta validacion
-                                    txtEmployeeFullname.setHint(getResources().getString(R.string.hint_employee_fullname));
-                                }
-                            });
-                        } catch(Exception e){
-                            Log.e("ValidarLegajo", e.getMessage());
+            // Levantamos una instancia de chequeo de base de datos
+            EmpleadoDB eDB = new EmpleadoDB(getApplicationContext());
+            // Validamos si el usuario ya esta registrado en la base de datos
+            if(!eDB.isAlreadySaved(legajo)) {
+                Thread threadValidateLegajo = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Usando el método dispuesto
+                        final Empleado validatedEmployee = APIRequests.GetEmpleado(legajo, getApplication());
+                        // Validamos si el empleado es nulo
+                        if (validatedEmployee != null) {
+                            try {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        // Levantamos la vista de empleado para nombre completo
+                                        EditText txtEmployeeFullname = (EditText) findViewById(R.id.txtEmployeFullname);
+                                        txtEmployeeFullname.setText(validatedEmployee.get_fullname());
+                                        // Al confirmar el usuario, levantamos el botón para lectura de huella
+                                        Button btnScanear = findViewById(R.id.btnScanear);
+                                        // Habilitamos el boton scaneo
+                                        enableButton(btnScanear);
+                                        // Obtenemos el botón de validación de legajo
+                                        Button btnValidateLegajo = findViewById(R.id.btnValidatelegajo);
+                                        // Inhabilitamos el botón
+                                        disableButton(btnValidateLegajo);
+                                        // Disponemos que no sea posible editar nuevamente el legajo
+                                        txtEmployeeNumber.setEnabled(false);
+                                        // Por motivos visuales se establece como color gris obscuro
+                                        txtEmployeeNumber.setTextColor(getResources().getColor(R.color.gray_background));
+                                        // Activamos la edicion del nombre y apellido
+                                        txtEmployeeFullname.setEnabled(true);
+                                        // Cambiamos el hint para que indique lo que se necesita luego de hacer correcta validacion
+                                        txtEmployeeFullname.setHint(getResources().getString(R.string.hint_employee_fullname));
+                                    }
+                                });
+                            } catch (Exception e) {
+                                Log.e("ValidarLegajo", e.getMessage());
+                            }
                         }
                     }
-                }
-            });
-            threadValidateLegajo.start();
+                });
+                threadValidateLegajo.start();
+            } else{
+                // El empleado ya se encuentra registrado, por lo que no es posible registrarlo nuevamente
+                Toast.makeText(getApplicationContext(), R.string.error_duplicated_employee, Toast.LENGTH_SHORT).show();
+                // Vaciamos el contenido del campo legajo
+                txtEmployeeNumber.setText(null);
+                // Hacemos focus
+                txtEmployeeNumber.requestFocus();
+            }
         } catch (Exception e) {
             Log.e("ValidarLegajo", e.getMessage());
         }

@@ -21,6 +21,7 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.apps4u.fpdatabase.Database;
 import io.apps4u.fpdatabase.Empleado;
 import io.apps4u.fpdatabase.Manager;
 import io.apps4u.fpdatabase.SignUp;
@@ -134,9 +135,9 @@ public class APIRequests {
                 queryStringParams.add(new AbstractMap.SimpleEntry(LEGAJO, sign.get_empleado().get_legajo()));
                 queryStringParams.add(new AbstractMap.SimpleEntry(LATITUDE, sign.get_coordinates().get_latitude()));
                 queryStringParams.add(new AbstractMap.SimpleEntry(LONGITUDE, sign.get_coordinates().get_longitude()));
-                queryStringParams.add(new AbstractMap.SimpleEntry(DETAILS, sign.get_details()));
+                queryStringParams.add(new AbstractMap.SimpleEntry(DETAILS, ""));
                 queryStringParams.add(new AbstractMap.SimpleEntry(ADDRESS, sign.get_address()));
-                queryStringParams.add(new AbstractMap.SimpleEntry(TIMESTAMP, sign.get_timestamp()));
+                queryStringParams.add(new AbstractMap.SimpleEntry(TIMESTAMP, Database.SwitchFromDatabaseToW4UDateformat(sign.get_timestamp())));
                 // Generamos un objeto DataOutputStream
                 OutputStream os = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));

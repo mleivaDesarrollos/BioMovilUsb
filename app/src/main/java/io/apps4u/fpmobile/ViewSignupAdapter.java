@@ -15,7 +15,7 @@ public class ViewSignupAdapter extends ArrayAdapter<String> {
     // Adaptador para generar el listado de fichadas del dia de la fecha
     public ViewSignupAdapter(Activity parentActivity, String[] paramFullnames, String[] paramSignups){
         // Llamamos al padre de la herencia
-        super(parentActivity, R.layout.layout_signups_list);
+        super(parentActivity, R.layout.layout_signups_list, paramFullnames);
         // Guardamos todos los parametros en sus respectivos lugares
         _fullnames = paramFullnames;
         _signups = paramSignups;

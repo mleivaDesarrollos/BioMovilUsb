@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "E:\\Programacion\\Android\\w4ubiomovil\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-fr\\values-fr.xml",
+            "outputFile": "G:\\Proyectos\\W4UMovil\\w4ubiomovil\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-fr\\values-fr.xml",
             "map": [
                 {
                     "source": "C:\\Users\\MDLei\\.gradle\\caches\\transforms-1\\files-1.1\\appcompat-v7-26.1.0.aar\\0a459ae6fd48a2847f64f23c8823351f\\res\\values-fr\\values-fr.xml",
