@@ -10,6 +10,8 @@ public class Database {
 
     public static final DateFormat FORMATDATE_W4U = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
+    public static final DateFormat FORMATDATE_DB = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     // Metodo dispuesto que segun configuracion devuelve el formato requerido para la base de datos
     public static String GetCurrentFormattedDateString(){
         return FORMATDATE_W4U.format(new Date());

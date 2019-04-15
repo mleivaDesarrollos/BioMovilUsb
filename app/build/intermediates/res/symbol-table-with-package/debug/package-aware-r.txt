@@ -740,6 +740,7 @@ id listMode
 id list_item
 id login_form
 id login_progress
+id lsvTodaySignups
 id lvEmpleados
 id media_actions
 id message
@@ -958,6 +959,7 @@ string pref_title_vibrate
 string prompt_email
 string prompt_password
 string search_menu_title
+string show_signups_title
 string status
 string status_bar_notification_info_overflow
 string title_activity_enrol

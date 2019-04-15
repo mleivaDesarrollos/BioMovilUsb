@@ -26,8 +26,16 @@
         android:debuggable="true"
         android:icon="@drawable/newlogo"
         android:label="@string/app_name"
+        android:testOnly="true"
         android:theme="@style/AppTheme" >
-        <activity android:name="io.apps4u.fpmobile.ShowSignups" />
+        <activity
+            android:name="io.apps4u.fpmobile.ActivityShowSignups"
+            android:label="@string/show_signups_title"
+            android:parentActivityName="io.apps4u.fpmobile.ActivityMain" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ActivityMain" />
+        </activity>
         <activity
             android:name="io.apps4u.fpmobile.ActivityMain"
             android:configChanges="orientation|keyboardHidden"

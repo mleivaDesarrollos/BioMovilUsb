@@ -22,7 +22,12 @@
         android:icon="@drawable/newlogo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityShowSignups"></activity>
+        <activity android:name=".ActivityShowSignups"
+            android:label="@string/show_signups_title"
+            android:parentActivityName=".ActivityMain">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ActivityMain"/>
+        </activity>
         <activity
             android:name=".ActivityMain"
             android:configChanges="orientation|keyboardHidden"

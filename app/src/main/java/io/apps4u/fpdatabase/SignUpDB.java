@@ -96,7 +96,7 @@ public class SignUpDB extends SQLiteOpenHelper {
             Cursor c = db.rawQuery("SELECT emps." + EmpleadoDB.TableDefinition.FULLNAME + " as employee_fullname, " +
                     "sgps." + TableDefinition.TIMESTAMP +" as signup_time FROM " + TableDefinition.NAME + " as sgps" +
                     " INNER JOIN " + EmpleadoDB.TableDefinition.NAME + " as emps " +
-                    " ON " + TableDefinition.LEGAJO + " = " + EmpleadoDB.TableDefinition.LEGAJO +
+                    " ON sgps." + TableDefinition.LEGAJO + " = emps." + EmpleadoDB.TableDefinition.LEGAJO +
                     " WHERE strftime('%Y-%m-%d', sgps." + TableDefinition.TIMESTAMP + ") = date('now', 'localtime') AND " +
                     " emps." + EmpleadoDB.TableDefinition.MANAGER_ID + " IN " +
                         " (SELECT " + ManagerDB.TableDefinition.LEGAJO +" FROM "

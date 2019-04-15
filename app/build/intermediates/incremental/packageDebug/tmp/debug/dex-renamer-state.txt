@@ -1,4 +1,4 @@
-#Sun Apr 14 19:30:27 ART 2019
+#Mon Apr 15 00:24:05 ART 2019
 base.0=E\:\\Programacion\\Android\\w4ubiomovil\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
 path.0=classes.dex
 renamed.0=classes.dex

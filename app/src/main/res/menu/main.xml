@@ -2,20 +2,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/mnu_show_today_signups"
+        android:icon="@android:drawable/ic_menu_sort_by_size"
+        android:orderInCategory="3"
+        android:title="@string/menu_show_today_signups"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/mnu_show_employees"
         android:icon="@android:drawable/ic_menu_my_calendar"
-        android:orderInCategory="102"
+        android:orderInCategory="2"
         android:title="@string/menu_show_employees"
         app:showAsAction="always" />
     <item
         android:id="@+id/mnu_new_employee"
         android:icon="@android:drawable/ic_menu_add"
-        android:orderInCategory="104"
+        android:orderInCategory="1"
         android:title="@string/menu_new_employee"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/mnu_show_today_signups"
-        android:title="Item" />
 
 
 </menu>

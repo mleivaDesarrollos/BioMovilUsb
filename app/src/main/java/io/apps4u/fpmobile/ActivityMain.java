@@ -115,7 +115,7 @@ public class ActivityMain extends Activity {
         // Validamos si el dispositivo esta listo para la fichada
         CheckIsReadyToFingerPrint();
         // Chequeamos las fichadas que aun no han sido enviadas a servidor
-        checkAndRegisterEnrollsOnServer();
+        //checkAndRegisterEnrollsOnServer();
     }
 
     @SuppressLint("NewApi")
@@ -567,6 +567,10 @@ public class ActivityMain extends Activity {
                 // another startActivity, this is for item with id "menu_item2"
                 Intent intentVerEmpleados = new Intent(this, ActivityShowEmployees.class);
                 this.startActivity(intentVerEmpleados);
+                break;
+            case R.id.mnu_show_today_signups:
+                Intent intentShowSignups = new Intent(this, ActivityShowSignups.class);
+                this.startActivity(intentShowSignups);
                 break;
             default:
                 return super.onOptionsItemSelected(item);

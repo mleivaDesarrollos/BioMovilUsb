@@ -3,6 +3,7 @@
 
     <string name="app_name">Work4U Bio Móvil</string>
     <string name="app_titel">Work4U Bio Móvil</string>
+    <string name="show_signups_title">Fichadas del dia</string>
     <string name="status">Abra el Lector</string>
     <string name="txt_status"></string>
     <string name="txt_bt1">Conectar Lector</string>

@@ -16,6 +16,7 @@ public class ActivityShowSignups extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_signups);
+        LoadSignupListOfToday();
     }
 
     private void LoadSignupListOfToday(){
@@ -27,6 +28,25 @@ public class ActivityShowSignups extends Activity {
         List<SignUp> lstSignups = sDB.GetTodaySignups(loggedManager);
         // Levantamos la lista de fichadas
         ListView lvSignups = findViewById(R.id.lsvTodaySignups);
-        // TODO iterar sobre el listado de fichadas obtenidas y pasar los parametros para que lo verifique el adaptador
+        if(lstSignups != null){
+            // Preparamos los arrays de strings
+            String lstFullnames[] = new String[lstSignups.size()];
+            String lstTimes[] = new String[lstSignups.size()];
+            // Iteramos sobre el listado completo
+            for(int signupsIndex = 0; signupsIndex < lstSignups.size(); signupsIndex++ ){
+                // Almacenamos los nombres y horarios
+                lstFullnames[signupsIndex] = lstSignups.get(signupsIndex).get_empleado().get_fullname();
+                lstTimes[signupsIndex] = lstSignups.get(signupsIndex).get_timestamp();
+            }
+            // Creamos un adaptador
+            ViewSignupAdapter adapter = new ViewSignupAdapter(this, lstFullnames, lstTimes);
+            // Vaciamos el listado que exista de fichadas
+            lvSignups.setAdapter(null);
+            // Disponemos el nuevo adaptador
+            lvSignups.setAdapter(adapter);
+        } else {
+            // Establecemos el adaptador a nulo
+            lvSignups.setAdapter(null);
+        }
     }
 }
